@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/haccgen/db" VERSION="2025071106" COMMENT="AI Course Generator plugin DB schema">
+    <TABLES>
+
+        <TABLE NAME="local_haccgen_job" COMMENT="Background jobs for AI Course Generator">
+            <FIELDS>
+                <FIELD NAME="id"           TYPE="int"    LENGTH="10" NOTNULL="true"  SEQUENCE="true"  COMMENT="Primary key"/>
+                <FIELD NAME="userid"       TYPE="int"    LENGTH="10" NOTNULL="true"                  COMMENT="User who initiated the job"/>
+                <FIELD NAME="courseid"     TYPE="int"    LENGTH="10" NOTNULL="true"                  COMMENT="Moodle course ID"/>
+                <FIELD NAME="type"         TYPE="char"   LENGTH="50" NOTNULL="true"                  COMMENT="subtopics|topiccontent|buildcourse"/>
+                <FIELD NAME="status"       TYPE="char"   LENGTH="20" NOTNULL="true" DEFAULT="queued" COMMENT="queued|running|success|error"/>
+                <FIELD NAME="progress"     TYPE="int"    LENGTH="3"  NOTNULL="true" DEFAULT="0"      COMMENT="Percent complete (0–100)"/>
+                <FIELD NAME="message"      TYPE="text"   LENGTH="small"                               COMMENT="Status / error message"/>
+                <FIELD NAME="inputjson"    TYPE="text"   LENGTH="big"                                 COMMENT="Input payload (JSON)"/>
+                <FIELD NAME="resultjson"   TYPE="text"   LENGTH="big"                                 COMMENT="Result payload (JSON)"/>
+                <FIELD NAME="timecreated"  TYPE="int"    LENGTH="10" NOTNULL="true" DEFAULT="0"      COMMENT="Created timestamp"/>
+                <FIELD NAME="timemodified" TYPE="int"    LENGTH="10" NOTNULL="true" DEFAULT="0"      COMMENT="Last modified timestamp"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary"   TYPE="primary" FIELDS="id"/>
+                <KEY NAME="userid_fk" TYPE="foreign" FIELDS="userid"   REFTABLE="user"   REFFIELDS="id"/>
+                <KEY NAME="course_fk" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="course_type_idx" UNIQUE="false" FIELDS="courseid,type"/>
+            </INDEXES>
+        </TABLE>
+
+        <TABLE NAME="local_haccgen_contentlog" COMMENT="Stores created content and drafts by AI Course Generator plugin">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key"/>
+                <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Moodle course ID"/>
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="User who created the content"/>
+                <FIELD NAME="cmid" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Course module ID (nullable for drafts)"/>
+                <FIELD NAME="content_type" TYPE="char" LENGTH="50" NOTNULL="true" COMMENT="page, quiz, draft"/>
+                <FIELD NAME="content_title" TYPE="text" LENGTH="small" NOTNULL="false" COMMENT="Title of the content"/>
+                <FIELD NAME="content_data" TYPE="text" LENGTH="big" NOTNULL="false" COMMENT="JSON data of the content"/>
+                <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="published" COMMENT="published or draft"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Timestamp"/>
+                <FIELD NAME="batchid" TYPE="char" LENGTH="32" NOTNULL="false" COMMENT="Identifier for grouped submissions"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="course_idx" UNIQUE="false" FIELDS="courseid"/>
+                <INDEX NAME="cmid_idx" UNIQUE="false" FIELDS="cmid"/>
+                <INDEX NAME="batchid_idx" UNIQUE="false" FIELDS="batchid"/>
+            </INDEXES>
+        </TABLE>
+
+    <TABLE NAME="local_haccgen_content" COMMENT="Stores generated course content snapshots">
+    <FIELDS>
+        <FIELD NAME="id"          TYPE="int"  LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="courseid"    TYPE="int"  LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="userid"      TYPE="int"  LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="batchid"     TYPE="char" LENGTH="40" NOTNULL="true"/>
+        <FIELD NAME="status"      TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="published"/> <!-- NEW -->
+        <FIELD NAME="topicsjson"  TYPE="text" LENGTH="big" NOTNULL="false"/>
+        <FIELD NAME="quizjson"    TYPE="text" LENGTH="big" NOTNULL="false"/>
+        <FIELD NAME="timecreated" TYPE="int"  LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true"/>
+    </FIELDS>
+    <KEYS>
+        <KEY NAME="primary"   TYPE="primary" FIELDS="id"/>
+        <KEY NAME="userid_fk" TYPE="foreign" FIELDS="userid"   REFTABLE="user"   REFFIELDS="id"/>
+        <KEY NAME="course_fk" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
+    </KEYS>
+    <INDEXES>
+        <INDEX NAME="courseid_idx" UNIQUE="false" FIELDS="courseid"/>
+        <INDEX NAME="user_course_status_idx" UNIQUE="false" FIELDS="userid,courseid,status"/>
+        <INDEX NAME="batchid_idx" UNIQUE="false" FIELDS="batchid"/>
+    </INDEXES>
+</TABLE>
+
+
+
+    </TABLES>
+</XMLDB>

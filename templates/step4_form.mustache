@@ -1,0 +1,668 @@
+<form method="post" action="{{action}}" id="step4-form">
+    <input type="hidden" name="id" value="{{courseid}}">
+    <input type="hidden" name="step" value="{{currentstep}}">
+    <input type="hidden" name="action" value="save">
+
+    <!-- NEW: canonical payload field -->
+    <input type="hidden" name="payload" id="payload" value="">
+    <!-- (optional) chunking metadata if needed -->
+    <input type="hidden" name="payload_parts" id="payload_parts" value="0">
+
+    <!-- Legacy (kept for back-compat; we still fill them) -->
+    <input type="hidden" name="topicsjson" id="topicsjson" value="">
+    <input type="hidden" name="quizjson" id="quizjson" value="">
+
+    <div class="container-fluid haccgen-container">
+
+        <!-- Progress Bar -->
+        <div class="step-progress-bar">
+            {{#steps}}
+                <div class="step step-active" data-tooltip="{{#str}}{{name}}, local_haccgen{{/str}}">
+                    <span class="step-circle step-circle-active">{{number}}</span>
+                    <span class="step-label">{{#str}}{{name}}, local_haccgen{{/str}}</span>
+                </div>
+                {{^last}}<div class="step-connector connector-active"></div>{{/last}}
+            {{/steps}}
+        </div>
+
+        <!-- Course outline and content -->
+        <div class="content-wrapper d-flex flex-wrap gap-4">
+
+            <!-- Left: Outline -->
+            <div class="left-panel">
+                <h5 class="mb-3">{{#str}}courseoutline, local_haccgen{{/str}}</h5>
+                <ul class="list-group">
+                    {{#topics}}
+                    <li class="list-group-item topic-item">
+    <div class="topic-header d-flex justify-content-between align-items-center">
+        {{title}}
+        <span class="toggle-icon">+</span>
+    </div>
+
+    <div class="subtopics collapse mt-2">
+        {{#subtopics}}
+            <div class="subtopic-item mt-2" data-subtitle="{{title}}" data-type="subtopic">
+                {{title}}
+            </div>
+        {{/subtopics}}
+
+        {{#quiz_data}}
+            <div class="subtopic-item mt-2 quiz-item"
+                 data-subtitle="{{quiz_title}}"
+                 data-type="quiz">
+                📝 {{quiz_title}}
+            </div>
+        {{/quiz_data}}
+    </div>
+</li>
+
+                    {{/topics}}
+                </ul>
+            </div>
+
+   <!-- Right: Editor / Quiz Preview -->     
+   <div class="right-panel flex-grow-1">
+                <h5 id="content-title">{{#str}}selectsubtopic, local_haccgen{{/str}}</h5>
+
+                <!-- Editor for subtopic -->
+                <div id="content-body" class="mt-3 p-3 border" style="min-height:500px;">
+                    {{{contenteditor}}}
+                </div>
+
+                <!-- Quiz preview -->
+                <div id="quiz-display" class="mt-3 p-3 border d-none" style="min-height:200px;">
+                    <h6>{{#str}}quizpreview, local_haccgen{{/str}}</h6>
+                    <div id="quiz-content"></div>
+                    <button type="button" class="btn btn-primary mb-3" id="add-new-quiz-btn">➕ Add New Quiz Question</button>
+                </div>
+
+                <!-- Save buttons -->
+                <div class="button-group mt-4">
+                    <a href="{{cancelurl}}" class="btn modern-btn modern-btn-secondary">
+                        {{#str}}cancel, local_haccgen{{/str}}
+                    </a>
+                    <button type="submit" class="btn modern-btn modern-btn-primary">
+                        {{#str}}savecreate, local_haccgen{{/str}}
+                    </button>
+                    <!-- keep legacy name so PHP sees savedraft=1 -->
+                    <button type="submit" name="savedraft" value="1" class="btn modern-btn modern-btn-secondary ms-2" id="savedraft-btn">
+                        {{#str}}savedraft, local_haccgen{{/str}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- --------------------------------------------------------------------- -->
+<!-- Raw data from PHP -->
+<script id="topics-data" type="application/json">{{{topicsjson}}}</script>
+<script id="quiz-data"   type="application/json">{{{quizContentJson}}}</script>
+
+<script>
+/* ---------- Universal editor helper (TinyMCE 6 / legacy / Atto / textarea) ---------- */
+function getActiveEditor(id = 'id_contenteditor') {
+    if (window.require) {
+        try {
+            const mgr = require('editor_tiny/editor');
+            const inst = mgr.getInstanceForElementId(id);
+            if (inst) return { type: 'tiny6', inst };
+        } catch (e) {}
+    }
+    if (window.tinyMCE && tinyMCE.get(id)) {
+        return { type: 'tinymce', inst: tinyMCE.get(id) };
+    }
+    if (window.Y?.M?.editor_atto?.Editor) {
+        const inst = Y.M.editor_atto.Editor.getEditor(id);
+        if (inst) return { type: 'atto', inst };
+    }
+    return { type: 'textarea', inst: document.getElementById(id) };
+}
+function setEditorContent(html, id = 'id_contenteditor') {
+    const ed = getActiveEditor(id);
+    if (!ed.inst) return;
+    switch (ed.type) {
+        case 'tiny6':
+        case 'tinymce': ed.inst.setContent(html); break;
+        case 'atto': ed.inst.setHTML(html); ed.inst.fire('change'); break;
+        default: ed.inst.value = html;
+    }
+}
+function getEditorContent(id = 'id_contenteditor') {
+    const ed = getActiveEditor(id);
+    if (!ed.inst) return '';
+    switch (ed.type) {
+        case 'tiny6':
+        case 'tinymce': return ed.inst.getContent({ format: 'html' });
+        case 'atto': return ed.inst.getHTML();
+        default: return ed.inst.value;
+    }
+}
+function whenEditorReady(cb, id = 'id_contenteditor', tries = 0) {
+    const ed = getActiveEditor(id);
+    if (ed.inst || tries > 40) { cb(); return; }
+    setTimeout(() => whenEditorReady(cb, id, ++tries), 150);
+}
+
+/* ---------- Data ---------- */
+const subtopicContents = {{#subtopicContentJson}}{{{.}}}{{/subtopicContentJson}}{{^subtopicContentJson}}{}{{/subtopicContentJson}};
+const quizContents     = {{#quizContentJson}}{{{.}}}{{/quizContentJson}}{{^quizContentJson}}{}{{/quizContentJson}};
+let currentSubtopicTitle = null;
+let currentQuizTitle     = null;
+
+/* ---------- itemid helpers ---------- */
+function setItemId(id){ const h = document.getElementById('contenteditor_itemid'); if (h) h.value = id; }
+function getItemId(){ const h = document.getElementById('contenteditor_itemid'); return h ? Number(h.value) : 0; }
+
+/* ---------- Subtopic logic ---------- */
+function loadSubtopicContent(title) {
+    const obj = subtopicContents[title] || { text: '<p><em>No content available.</em></p>', itemid: 0 };
+    whenEditorReady(() => {
+        setEditorContent(obj && typeof obj === 'object' && 'text' in obj ? obj.text : obj);
+        setItemId(obj && typeof obj === 'object' && 'itemid' in obj ? obj.itemid : 0);
+    });
+    document.getElementById('content-title').innerText = title;
+}
+function saveCurrent() {
+    if (!currentSubtopicTitle) return;
+    subtopicContents[currentSubtopicTitle] = { text: getEditorContent(), itemid: getItemId() };
+}
+
+/* ---------- Quiz logic (existing) ---------- */
+function showQuizContent(title) {
+    const quizData = quizContents[title];
+    const container = document.getElementById('quiz-content');
+    container.innerHTML = '';
+    currentQuizTitle = title;
+    if (!quizData || !quizData.questions || !quizData.questions.length) {
+        container.innerHTML = '<p><em>No questions found.</em></p>'; return;
+    }
+    quizData.questions.forEach((q, index) => {
+        const qDiv = document.createElement('div');
+        qDiv.className = 'quiz-question mb-4 p-3 border rounded';
+        qDiv.setAttribute('data-index', index);
+        qDiv.innerHTML = `
+            <p><strong>Q${index + 1}:</strong> <span class="question-text">${q.question}</span></p>
+            <ul class="quiz-options">${q.options.map(opt => `<li>${opt}</li>`).join('')}</ul>
+            <p><em>Answer:</em> <span class="answer-text">${q.answer || q.correct_answer || ''}</span></p>
+            <p><em>Explanation:</em> <span class="explanation-text">${q.explanation || ''}</span></p>
+            <button type="button" class="btn btn-sm btn-outline-primary edit-question-btn">Edit</button>
+            <button type="button" class="btn btn-sm btn-outline-danger ms-2 delete-question-btn">Delete</button>
+            <button type="button" class="btn btn-sm btn-success save-question-btn d-none">Save</button>
+            <button type="button" class="btn btn-sm btn-secondary cancel-question-btn d-none ms-2">Cancel</button>
+        `;
+        container.appendChild(qDiv);
+    });
+
+    document.querySelectorAll('.edit-question-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const wrapper = this.closest('.quiz-question');
+            const index = wrapper.getAttribute('data-index');
+            const data = quizContents[title].questions[index];
+            const correctLetter = (data.correct_answer || data.answer || '').toUpperCase().trim();
+            const correctIndex = /^[A-Z]$/.test(correctLetter) ? correctLetter.charCodeAt(0) - 65 : -1;
+
+            wrapper.querySelector('.question-text').outerHTML =
+                `<input type="text" class="form-control mb-2 question-input" value="${data.question}">`;
+
+            wrapper.querySelector('.quiz-options').outerHTML = `
+                <div class="options-group">
+                    ${data.options.map((opt, i) => `
+                        <div class="form-check mb-2 d-flex align-items-center">
+                            <input class="form-check-input me-2 correct-radio" type="radio" name="correct-${index}" value="${i}" ${i===correctIndex?'checked':''}>
+                            <label class="form-check-label me-2">${String.fromCharCode(65+i)}.</label>
+                            <input type="text" class="form-control option-input" data-opt-index="${i}" value="${opt}">
+                        </div>
+                    `).join('')}
+                </div>`;
+
+            wrapper.querySelector('.explanation-text').outerHTML =
+                `<textarea class="form-control mb-2 explanation-input">${data.explanation || ''}</textarea>`;
+
+            this.classList.add('d-none');
+            wrapper.querySelector('.save-question-btn').classList.remove('d-none');
+            wrapper.querySelector('.cancel-question-btn').classList.remove('d-none');
+        });
+    });
+
+    document.querySelectorAll('.save-question-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const w = this.closest('.quiz-question');
+            const index = w.getAttribute('data-index');
+            const qIn = w.querySelector('.question-input');
+            const exIn = w.querySelector('.explanation-input');
+            const opts = w.querySelectorAll('.option-input');
+            const sel  = w.querySelector('.correct-radio:checked')?.value;
+            const question = qIn.value.trim();
+            const options = Array.from(opts).map(i => i.value.trim());
+            if (!question) return alert('Question cannot be empty.');
+            if (options.some(opt => !opt)) return alert('All options must be filled.');
+            if (sel === undefined) return alert('Please select the correct answer.');
+            const correctLetter = String.fromCharCode(65 + parseInt(sel));
+            const original = quizContents[title].questions[index];
+            quizContents[title].questions[index] = {
+                question_id: original.question_id || 'q' + (parseInt(index) + 1),
+                type: original.type || 'multiple_choice',
+                difficulty: original.difficulty || 'easy',
+                question, options,
+                correct_answer: correctLetter,
+                explanation: exIn.value.trim()
+            };
+            w.removeAttribute('data-unsaved');
+            showQuizContent(title);
+        });
+    });
+
+    document.querySelectorAll('.cancel-question-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const w = this.closest('.quiz-question');
+            if (w.dataset.unsaved === 'true') { alert('Please save the new question or delete it.'); return; }
+            showQuizContent(title);
+        });
+    });
+
+    document.querySelectorAll('.delete-question-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const w = this.closest('.quiz-question');
+            const index = parseInt(w.getAttribute('data-index'));
+            quizContents[title].questions.splice(index, 1);
+            quizContents[title].questions.forEach((q, i) => { q.question_id = `q${i+1}`; });
+            showQuizContent(title);
+        });
+    });
+
+    document.getElementById('content-title').innerText = title;
+}
+
+/* ---------- Build one canonical payload ---------- */
+function buildPayload() {
+    // capture current editor state into subtopicContents
+    saveCurrent();
+
+    const topics = [];
+    document.querySelectorAll('.topic-item').forEach(li => {
+const header = li.querySelector('.topic-header');
+const title = header ? header.childNodes[0].textContent.trim() : 'Untitled Topic';
+
+        // subtopics (respect left panel ordering)
+        const subtopics = [...li.querySelectorAll('.subtopic-item[data-type="subtopic"]')].map(div => {
+            const st = div.dataset.subtitle;
+            const obj = subtopicContents[st] || { text: '<p><em>No content.</em></p>', itemid: 0 };
+            const text   = (obj && typeof obj === 'object' && 'text'   in obj) ? obj.text   : obj;
+            const itemid = (obj && typeof obj === 'object' && 'itemid' in obj) ? Number(obj.itemid) : 0;
+            return { title: st, content: { text, itemid }, type: 'page' };
+        });
+
+        // quiz (optional)
+        let quiz = null;
+        const quizEl = li.querySelector('.subtopic-item[data-type="quiz"]');
+        if (quizEl) {
+            const qtitle = quizEl.dataset.subtitle;
+            const qdata  = quizContents[qtitle];
+            if (qdata && Array.isArray(qdata.questions)) {
+                quiz = {
+                    quiz_title: qtitle,
+                    instructions: qdata.instructions || '',
+                    questions: qdata.questions.map((q, i) => ({
+                        question_id:   q.question_id || `q${i+1}`,
+                        type:          q.type || 'multiple_choice',
+                        difficulty:    q.difficulty || 'easy',
+                        question:      (q.question || '').trim(),
+                        options:       Array.isArray(q.options) ? q.options.map(o => (o||'').trim()) : [],
+                        correct_answer:(q.correct_answer || q.answer || '').trim(),
+                        explanation:   (q.explanation || '').trim()
+                    }))
+                };
+            }
+        }
+
+        topics.push({ title, subtopics, ...(quiz ? { quiz } : {}) });
+    });
+      console.log(topics);
+    return {
+        meta: { courseid: Number(document.querySelector('input[name="id"]').value), step: 4, version: 1 },
+        topics
+    };
+}
+
+/* ---------- Chunking helper (avoids post_max_size pain) ---------- */
+function setPayloadHidden(jsonStr, chunkSize = 200000) {
+    const form = document.getElementById('step4-form');
+
+    // remove old chunks
+    [...form.querySelectorAll('input[name^="payload_"]')].forEach(n => n.remove());
+    const payloadField = document.getElementById('payload');
+    const partsField   = document.getElementById('payload_parts');
+
+    if (jsonStr.length <= chunkSize) {
+        payloadField.value = jsonStr;
+        if (partsField) partsField.value = '0';
+        return;
+    }
+    payloadField.value = '';
+    const num = Math.ceil(jsonStr.length / chunkSize);
+    for (let i = 0; i < num; i++) {
+        const hidden = document.createElement('input');
+        hidden.type = 'hidden';
+        hidden.name = `payload_${i+1}`;
+        hidden.value = jsonStr.slice(i * chunkSize, (i+1) * chunkSize);
+        form.appendChild(hidden);
+    }
+    if (partsField) partsField.value = String(num);
+}
+
+/* ------------ DOM Ready ------------ */
+document.addEventListener('DOMContentLoaded', () => {
+    // prevent accidental submits on Enter (outside textareas)
+    document.getElementById('step4-form')?.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') e.preventDefault();
+    });
+
+    // initial load
+    const firstSub = document.querySelector('.subtopic-item[data-type="subtopic"]') || document.querySelector('.subtopic-item');
+    if (firstSub) {
+        currentSubtopicTitle = firstSub.dataset.subtitle;
+        firstSub.classList.add('active');   // ✅ highlight as default active
+        loadSubtopicContent(currentSubtopicTitle);
+        document.getElementById('quiz-display')?.classList.add('d-none');
+        document.getElementById('content-body').style.display = '';
+    }
+ document.querySelectorAll('.topic-header').forEach(header => {
+        header.addEventListener('click', () => {
+            const subtopics = header.nextElementSibling;
+            const icon = header.querySelector('.toggle-icon');
+
+            if (subtopics.classList.contains('show')) {
+                subtopics.classList.remove('show');
+                icon.textContent = '+';
+            } else {
+                subtopics.classList.add('show');
+                icon.textContent = '–';
+            }
+        });
+    });
+    // delegate clicks
+    document.addEventListener('click', (e) => {
+          const item = e.target.closest('.subtopic-item');
+        if (!item) return;
+           document.querySelectorAll('.subtopic-item.active').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+
+        const type  = item.dataset.type || 'subtopic';
+        const title = item.dataset.subtitle;
+
+        const contentBody = document.getElementById('content-body');
+        const quizDisplay = document.getElementById('quiz-display');
+        if (type === 'subtopic') {
+            if (title === currentSubtopicTitle) return;
+            saveCurrent();
+            currentQuizTitle     = null;
+            currentSubtopicTitle = title;
+            quizDisplay?.classList.add('d-none');
+            contentBody.style.display = '';
+            loadSubtopicContent(title);
+        } else if (type === 'quiz') {
+            saveCurrent();
+            currentSubtopicTitle = null;
+            contentBody.style.display = 'none';
+            quizDisplay?.classList.remove('d-none');
+            showQuizContent(title);
+        }
+    });
+
+    document.getElementById('add-new-quiz-btn')?.addEventListener('click', () => {
+        if (!currentQuizTitle || !quizContents[currentQuizTitle]) return;
+        const questions = quizContents[currentQuizTitle].questions;
+        const newIndex = questions.length;
+        questions.push({ question_id:`q${newIndex+1}`, type:'multiple_choice', difficulty:'easy', question:'', options:['','','',''], correct_answer:'', explanation:'' });
+        showQuizContent(currentQuizTitle);
+        setTimeout(() => {
+            const lastCard = document.querySelector(`.quiz-question[data-index="${newIndex}"]`);
+            if (lastCard) { lastCard.dataset.unsaved = 'true'; lastCard.querySelector('.edit-question-btn')?.click(); }
+        }, 100);
+    });
+
+    
+    document.getElementById('step4-form').addEventListener('submit', () => {
+        // normalize edited quiz questions (unchanged from your code)
+        const quizBlocks = document.querySelectorAll('.quiz-question');
+        quizBlocks.forEach(w => {
+            const index = w.getAttribute('data-index');
+            const qIn   = w.querySelector('.question-input');
+            const optIn = w.querySelectorAll('.option-input');
+            const ansIn = w.querySelector('.answer-input');
+            const exIn  = w.querySelector('.explanation-input');
+            if (qIn && optIn.length && currentQuizTitle && quizContents[currentQuizTitle]?.questions) {
+                const original = quizContents[currentQuizTitle].questions[index];
+                quizContents[currentQuizTitle].questions[index] = {
+                    question_id: original.question_id || 'q' + (parseInt(index) + 1),
+                    type: original.type || 'multiple_choice',
+                    difficulty: original.difficulty || 'easy',
+                    question: qIn.value.trim(),
+                    options: Array.from(optIn).map(i => i.value.trim()),
+                    correct_answer: ansIn?.value.trim() || original.correct_answer || '',
+                    explanation: exIn?.value.trim() || ''
+                };
+            }
+        });
+
+        // also normalize untouched questions
+        for (const qTitle in quizContents) {
+            if (!quizContents[qTitle]?.questions) continue;
+            quizContents[qTitle].questions = quizContents[qTitle].questions.map((q, idx) => ({
+                question_id: q.question_id || `q${idx+1}`,
+                type: q.type || 'multiple_choice',
+                difficulty: q.difficulty || 'easy',
+                question: (q.question || '').trim(),
+                options: Array.isArray(q.options) ? q.options.map(o => (o||'').trim()) : [],
+                correct_answer: (q.correct_answer || q.answer || '').trim(),
+                explanation: (q.explanation || '').trim()
+            }));
+        }
+
+        // Build the single payload and place it in hidden inputs (with chunking if large)
+        const json = JSON.stringify(buildPayload());
+        setPayloadHidden(json); // will fill #payload or create payload_1..N + payload_parts
+
+        // Also fill legacy fields for back-compat (safe to remove after server switch)
+        document.getElementById('topicsjson').value = JSON.stringify(subtopicContents);
+        document.getElementById('quizjson').value   = JSON.stringify(quizContents);
+    });
+
+    // Optional: explicitly flag savedraft on click (keeps legacy button name/value too)
+    document.getElementById('savedraft-btn')?.addEventListener('click', () => {
+        // nothing else required; name="savedraft" value="1" already posts
+        // we just ensure editor state is captured before submit:
+        saveCurrent();
+    });
+});
+</script>
+
+
+
+
+
+
+<!-- Styles (paste in <style> block or external stylesheet) -->
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .aicourse-container {
+        padding: 20px;
+        background: #fff;
+        min-height: 100vh;
+    }
+
+    .step-progress-bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 30px;
+    }
+
+    .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+    }
+
+    .step-circle {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #e0e0e0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+
+    .step-circle-active {
+        background: #0069cc;
+        color: #fff;
+    }
+
+    .step-label {
+        margin-top: 8px;
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .step-active .step-label {
+        color: #0069cc;
+    }
+
+    .step-connector {
+        flex-grow: 1;
+        height: 2px;
+        background: #e0e0e0;
+        margin: 0 10px;
+    }
+
+    .connector-active {
+        background: #0069cc;
+    }
+
+    .left-panel {
+        width: 30%;
+        background: #f8f9fa;
+        border-radius: 5px;
+        padding: 20px;
+    }
+
+    .right-panel {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 20px;
+        flex: 1;
+    }
+
+    .topic-item {
+        background: #e9ecef;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+
+    .subtopic-item {
+        padding: 8px 12px;
+        margin: 5px 0;
+        background: #f1f3f5;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    .subtopic-item:hover {
+        background: #e2e6ea;
+    }
+
+    .button-group {
+        text-align: right;
+    }
+
+    .modern-btn {
+        padding: 10px 20px;
+        border-radius: 8px;
+        color: #fff;
+        transition: all 0.3s ease;
+    }
+
+    .modern-btn-primary {
+        background: #0069cc;
+        border: none;
+    }
+
+    .modern-btn-primary:hover {
+        background: #0056b3;
+        transform: translateY(-2px);
+    }
+
+    .modern-btn-secondary {
+        background: #6c757d;
+        border: none;
+    }
+
+    .modern-btn-secondary:hover {
+        background: #5a6268;
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        .content-wrapper {
+            flex-direction: column;
+        }
+
+        .left-panel,
+        .right-panel {
+            width: 100% !important;
+        }
+    }
+    .tox.tox-tinymce {
+  min-height: 650px !important;
+}
+.help-hover{
+    margin-bottom: 5px;
+}
+.secondary-navigation .moremenu .nav-tabs .nav-link.active {
+    background-color: #0069cc !important;
+    color: #fff !important;
+    border-color: #0056b3 #0056b3 #0069cc !important;
+}
+.subtopics {
+    display: none;
+    transition: all 0.3s ease;
+}
+
+.subtopics.show {
+    display: block;
+}
+
+.topic-header {
+    cursor: pointer;
+    padding: 8px;
+    background: #fff;
+    border-radius: 4px;
+    font-weight: 450;
+}
+
+.topic-header:hover {
+    background: #ced4da;
+}
+
+.toggle-icon {
+    font-size: 0.9rem;
+    color: #333;
+}
+.subtopic-item.active {
+     color: black;
+    font-weight: 600;
+    border-radius: 4px;
+    border-left: 3px solid #0069cc;
+}
+
+
+</style>
