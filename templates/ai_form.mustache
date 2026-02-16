@@ -1,3 +1,13 @@
+{{! 
+This file is part of Moodle
+
+ISO Latin-1 encoding translations
+Source: PostScript::ISOLatin1Encoding (Perl)
+
+@package local_haccgen
+@copyright 2026 Dynamicpixel Multimedia Solutions
+@license GNU GPL v3 or later
+}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,12 +18,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-<div class="container-fluid aicourse-container">
+<div class="container-fluid haccgen-container">
+{{^statusactive}}
+    {{#statusmessage}}
+        <div class="{{statusclass}}" role="alert">
+            {{{statusmessage}}}
+        </div>
+    {{/statusmessage}}
+{{/statusactive}}
+
+    {{#statusactive}}
+    <!-- ================= ACTIVE STATUS ================= -->
     <div class="row">
         <!-- Left Side: Input Form (col-md-7) -->
         <div class="col-md-7">
             <div class="input-section">
-                <form action="{{action}}" method="post" id="aicourse-form" enctype="multipart/form-data">
+                <form action="{{action}}" method="post" id="haccgen-form" enctype="multipart/form-data">
                     <input type="hidden" name="id" value="{{courseid}}">
                     <input type="hidden" name="step" value="{{currentstep}}">
 
@@ -21,10 +41,12 @@
                     <div class="form-group generation-type">
                         <div class="radio-group">
                             <label class="radio-label">
-                           <input type="radio" name="generation_type" value="ai" checked>Generating with AI
+                                <input type="radio" name="generationtype" value="ai" checked>
+                                {{#str}}generatingwithai, local_haccgen{{/str}}
                             </label>
                             <label class="radio-label">
-                                <input type="radio" name="generation_type" value="uploaded" {{#generation_type.uploaded}}checked{{/generation_type.uploaded}}> Generating with Uploaded Content
+                                <input type="radio" name="generationtype" value="uploaded" {{#generationtype.uploaded}}checked{{/generationtype.uploaded}}>
+                                {{#str}}generatingwithuploaded, local_haccgen{{/str}}
                             </label>
                         </div>
                     </div>
@@ -33,35 +55,34 @@
                     <div id="ai-generation-fields">
                         <div class="form-group">
                             <div class="d-flex align-items-center">
-                                <label for="TOPICTITLE_ai" class="mr-2">{{#str}}TOPICTITLE, local_aicourse{{/str}}</label>
- {{#TOPICTITLE_helpicon}}{{> core/help_icon}}{{/TOPICTITLE_helpicon}}
-</div>
+                                <label for="TOPICTITLE_ai" class="mr-2">{{#str}}TOPICTITLE, local_haccgen{{/str}}</label>
+                                {{#TOPICTITLE_helpicon}}{{> core/help_icon}}{{/TOPICTITLE_helpicon}}
+                            </div>
                             <div class="tag-input-wrapper">
                                 <div class="tag-container">
-                                    <input type="text" name="TOPICTITLE" id="TOPICTITLE_ai" class="form-control modern-input" style="background-color:lightgrey" placeholder="Enter your title here..." value="{{TOPICTITLE}}" required>
+                                    <input type="text" name="TOPICTITLE" id="TOPICTITLE_ai" class="form-control modern-input" style="background-color:lightgrey" placeholder="{{#str}}placeholder_topictitle, local_haccgen{{/str}}" value="{{TOPICTITLE}}" required>
                                 </div>
                                 {{#errors.TOPICTITLE}}<span class="error">{{errors.TOPICTITLE}}</span>{{/errors.TOPICTITLE}}
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="d-flex align-items-center">
-                                <label for="targetaudience_ai" class="mr-2">{{#str}}targetaudience, local_aicourse{{/str}}</label>
-                              {{#targetaudience_helpicon}}{{> core/help_icon}}{{/targetaudience_helpicon}}
-
+                                <label for="targetaudience_ai" class="mr-2">{{#str}}targetaudience, local_haccgen{{/str}}</label>
+                                {{#targetaudience_helpicon}}{{> core/help_icon}}{{/targetaudience_helpicon}}
                             </div>
                             <div class="tag-input-wrapper">
                                 <div id="tag-container-ai" class="tag-container"></div>
-                                <input type="text" id="tag-input-ai" class="form-control tag-input modern-input" placeholder="Type and press Enter, comma, or click outside">
+                                <input type="text" id="tag-input-ai" class="form-control tag-input modern-input" placeholder="{{#str}}placeholder_tags, local_haccgen{{/str}}">
                             </div>
                             <input type="hidden" name="targetaudience" id="targetaudience-hidden-ai">
                             {{#errors.targetaudience}}<span class="error">{{errors.targetaudience}}</span>{{/errors.targetaudience}}
                         </div>
                         <div class="form-group">
                             <div class="d-flex align-items-center">
-                                <label for="description_ai" class="mr-2">{{#str}}description, local_aicourse{{/str}}</label>
-                                  {{#description_helpicon}}{{> core/help_icon}}{{/description_helpicon}}
+                                <label for="description_ai" class="mr-2">{{#str}}description, local_haccgen{{/str}}</label>
+                                {{#description_helpicon}}{{> core/help_icon}}{{/description_helpicon}}
                             </div>
-                            <textarea name="description" id="description_ai" class="form-control modern-input" placeholder="Enter a brief description (optional)">{{description}}</textarea>
+                            <textarea name="description" id="description_ai" class="form-control modern-input" placeholder="{{#str}}placeholder_description_optional, local_haccgen{{/str}}">{{description}}</textarea>
                         </div>
                     </div>
 
@@ -69,8 +90,8 @@
                     <div id="uploaded-content-fields" style="display: none;">
                         <div class="form-group">
                             <div class="d-flex align-items-center">
-                                <label for="TOPICTITLE_uploaded" class="mr-2">{{#str}}TOPICTITLE, local_aicourse{{/str}}</label>
-                               {{#TOPICTITLE_helpicon}}{{> core/help_icon}}{{/TOPICTITLE_helpicon}}
+                                <label for="TOPICTITLE_uploaded" class="mr-2">{{#str}}TOPICTITLE, local_haccgen{{/str}}</label>
+                                {{#TOPICTITLE_helpicon}}{{> core/help_icon}}{{/TOPICTITLE_helpicon}}
                             </div>
                             <div class="tag-input-wrapper">
                                 <div class="tag-container">
@@ -81,8 +102,8 @@
                         </div>
                         <div class="form-group">
                             <div class="d-flex align-items-center">
-                                <label for="targetaudience_uploaded" class="mr-2">{{#str}}targetaudience, local_aicourse{{/str}}</label>
-                                   {{#targetaudience_helpicon}}{{> core/help_icon}}{{/targetaudience_helpicon}}
+                                <label for="targetaudience_uploaded" class="mr-2">{{#str}}targetaudience, local_haccgen{{/str}}</label>
+                                {{#targetaudience_helpicon}}{{> core/help_icon}}{{/targetaudience_helpicon}}
                             </div>
                             <div class="tag-input-wrapper">
                                 <div id="tag-container-uploaded" class="tag-container"></div>
@@ -94,7 +115,7 @@
                         <div class="form-group">
                             <div class="d-flex align-items-center">
                                 <span class="icon-upload mr-2">📄</span>
-                                <label for="pdf_upload" class="mr-2">{{#str}}upload_pdf, local_aicourse{{/str}}</label>
+                                <label for="pdf_upload" class="mr-2">{{#str}}upload_pdf, local_haccgen{{/str}}</label>
                                 {{#pdfupload_helpicon}}{{> core/help_icon}}{{/pdfupload_helpicon}}
                             </div>
                             <input type="file" name="pdf_upload" id="pdf_upload" class="form-control modern-input" accept=".pdf">
@@ -102,70 +123,83 @@
                         </div>
                         <div class="form-group">
                             <div class="d-flex align-items-center">
-                                <label for="description_uploaded" class="mr-2">{{#str}}description, local_aicourse{{/str}}</label>
-                                 {{#description_helpicon}}{{> core/help_icon}}{{/description_helpicon}}
+                                <label for="description_uploaded" class="mr-2">{{#str}}description, local_haccgen{{/str}}</label>
+                                {{#description_helpicon}}{{> core/help_icon}}{{/description_helpicon}}
                             </div>
                             <textarea name="description_uploaded" id="description_uploaded" class="form-control modern-input" placeholder="Enter a brief description (optional)">{{description}}</textarea>
                         </div>
                     </div>
 
-                    <div class="form-group d-flex justify-content-between" style="margin-left: 280px;">
-                        <a href="{{cancelurl}}" class="btn btn-secondary modern-btn modern-btn-secondary">{{#str}}back, local_aicourse{{/str}}</a>
-                        <button type="submit" class="btn btn-primary modern-btn modern-btn-primary">Continue</button>
+                   
+                  <div class="form-group d-flex justify-content-start gap-2">
+                        <a href="{{cancelurl}}" class="btn btn-secondary modern-btn modern-btn-secondary">{{#str}}back, local_haccgen{{/str}}</a>
+                        <button type="submit" class="btn btn-primary modern-btn modern-btn-primary">{{#str}}continue, local_haccgen{{/str}}</button>
                     </div>
+                       <!-- Disclaimer Text -->
+                  <div class="form-group mt-3">
+                     <p class="text-muted small" style="font-style: italic;">
+                 {{#str}} disclaimer_text, local_haccgen {{/str}}</p>
+                  </div>
                 </form>
             </div>
         </div>
 
         <!-- Right Side: Preview (col-md-5) -->
         <div class="col-md-5">
-         <!-- Load Old Draft Button -->
-{{#hasdraft}}
-  <!-- <div class="d-flex justify-content-end mb-3">-->
-  <div class="d-flex justify-content-end align-items-end mb-3">
-    <a href="{{{config.wwwroot}}}/local/aicourse/old_draft.php?id={{courseid}}" class="btn btn-warning float-end" style="margin-top: 10px;">
-      <i class="fas fa-history"></i> Manage Draft Data
-    </a>
- </div>
-{{/hasdraft}}
-<!-- Enhanced Step Progress Bar -->
-            <div class="step-progress-bar">
-                <div class="step {{#step_states.is_step1_active}}step-active{{/step_states.is_step1_active}}" data-tooltip="Basics">
-                    <span class="step-circle {{#step_states.is_step1_active}}step-circle-active{{/step_states.is_step1_active}}"></span>
-                    <span class="step-label">Basics</span>
-                </div>
-                <div class="step-connector {{#step_states.is_connector1_active}}connector-active{{/step_states.is_connector1_active}}"></div>
-                <div class="step {{#step_states.is_step2_active}}step-active{{/step_states.is_step2_active}}" data-tooltip="Details">
-                    <span class="step-circle {{#step_states.is_step2_active}}step-circle-active{{/step_states.is_step2_active}}"></span>
-                    <span class="step-label">Details</span>
-                </div>
-                <div class="step-connector {{#step_states.is_connector2_active}}connector-active{{/step_states.is_connector2_active}}"></div>
-                <div class="step {{#step_states.is_step3_active}}step-active{{/step_states.is_step3_active}}" data-tooltip="Review">
-                    <span class="step-circle {{#step_states.is_step3_active}}step-circle-active{{/step_states.is_step3_active}}"></span>
-                    <span class="step-label">Review</span>
-                </div>
-                <div class="step-connector {{#step_states.is_connector3_active}}connector-active{{/step_states.is_connector3_active}}"></div>
-               <div class="step {{#step_states.is_step4_active}}step-active{{/step_states.is_step4_active}}" data-tooltip="Finalize">
-               <span class="step-circle {{#step_states.is_step4_active}}step-circle-active{{/step_states.is_step4_active}}"></span>
-               <span class="step-label">Finalize</span>
-    </div>
+        {{#hasdraft}}
+            <div class="d-flex justify-content-end align-items-end mb-3">
+                <a href="{{{config.wwwroot}}}/local/haccgen/old_draft.php?id={{courseid}}" class="btn btn-warning float-end" style="margin-top: 10px;">
+                    <i class="fas fa-history"></i> {{#str}}managedraftdata, local_haccgen{{/str}}
+                </a>
             </div>
+            {{/hasdraft}}
+
+            <!-- Enhanced Step Progress Bar -->
+            <div class="step-progress-bar">
+                <div class="step {{#stepstates.is_step1_active}}step-active{{/stepstates.is_step1_active}}" data-tooltip="Basics">
+                    <span class="step-circle {{#stepstates.is_step1_active}}step-circle-active{{/stepstates.is_step1_active}}"></span>
+                    <span class="step-label">{{#str}}basics, local_haccgen{{/str}}</span>
+                </div>
+                <div class="step-connector {{#stepstates.is_connector1_active}}connector-active{{/stepstates.is_connector1_active}}"></div>
+                <div class="step {{#stepstates.is_step2_active}}step-active{{/stepstates.is_step2_active}}" data-tooltip="Details">
+                    <span class="step-circle {{#stepstates.is_step2_active}}step-circle-active{{/stepstates.is_step2_active}}"></span>
+                    <span class="step-label">{{#str}}details, local_haccgen{{/str}}</span>
+                </div>
+                <div class="step-connector {{#stepstates.is_connector2_active}}connector-active{{/stepstates.is_connector2_active}}"></div>
+                <div class="step {{#stepstates.is_step3_active}}step-active{{/stepstates.is_step3_active}}" data-tooltip="Review">
+                    <span class="step-circle {{#stepstates.is_step3_active}}step-circle-active{{/stepstates.is_step3_active}}"></span>
+                    <span class="step-label">{{#str}}review, local_haccgen{{/str}}</span>
+                </div>
+                <div class="step-connector {{#stepstates.is_connector3_active}}connector-active{{/stepstates.is_connector3_active}}"></div>
+                <div class="step {{#stepstates.is_step4_active}}step-active{{/stepstates.is_step4_active}}" data-tooltip="Finalize">
+                    <span class="step-circle {{#stepstates.is_step4_active}}step-circle-active{{/stepstates.is_step4_active}}"></span>
+                    <span class="step-label">{{#str}}finalize, local_haccgen{{/str}}</span>
+                </div>
+            </div>
+            <!-- Language selector -->
+<div class="form-group mb-3">
+  <label for="language-select" class="form-label">{{#str}}language, local_haccgen{{/str}}</label>
+  <select id="language-select" class="form-select">
+    <!-- Options will be injected by JS -->
+  </select>
+  <!-- Hidden field so selection is included on submit -->
+  <input type="hidden" name="activelang" id="active-lang">
+  <!-- Optional: live preview of the prompt -->
+  <div class="form-text mt-2" id="lang-prompt" style="white-space:pre-wrap;"></div>
+</div>
+            <!-- Preview Card -->
             <div class="card preview-card">
                 <div class="card border-0 p-4 mb-4" style="background-color: #fff; border-radius: 12px; width:400px">
-                    <!-- Preview Section -->
                     <div style="margin-bottom: 2rem;">
-                        <!-- Section Label -->
                         <div style="display: flex; align-items: center; gap: 6px; font-size: 0.9rem; color: #6c757d; border-bottom: 1px solid #ddd; padding-bottom: 4px; margin-bottom: 12px;">
                             <i class="fa fa-eye" aria-hidden="true"></i>
-                            <span>{{#str}}previewtitle, local_aicourse{{/str}}</span>
+                            <span>{{#str}}previewtitle, local_haccgen{{/str}}</span>
                         </div>
 
-                        <!-- TOPIC TITLE -->
                         <h4 style="margin: 0 0 1rem 0; font-weight: 600;" id="preview-title">{{TOPICTITLE}}</h4>
 
-                        <!-- Audience Tags -->
                         <div style="display: flex; flex-wrap: wrap; align-items: center; margin-bottom: 1rem;">
-                            <span style="color: #6c757d; margin-right: 0.5rem;">Audience</span>
+                            <span style="color: #6c757d; margin-right: 0.5rem;">{{#str}}audience, local_haccgen{{/str}}</span>
                             {{#audiencetags}}
                                 <span style="background-color: #e0e0e0; border-radius: 20px; padding: 4px 12px; font-size: 0.85rem; margin-right: 8px; margin-bottom: 6px;">
                                     {{.}}
@@ -173,21 +207,19 @@
                             {{/audiencetags}}
                         </div>
 
-                        <!-- Summary Line -->
                         <p style="color: #555; font-size: 0.95rem;" id="preview-audience">
-                            {{#str}}courseisfor, local_aicourse, {"title": "{{TOPICTITLE}}", "audience": "{{targetaudience}}"}{{/str}}
+                            {{#str}}courseisfor, local_haccgen, {"title": "{{TOPICTITLE}}", "audience": "{{targetaudience}}"}{{/str}}
                         </p>
 
-                        <!-- Optional Description -->
                         {{#description}}
                         <p id="preview-description" style="color: #666; font-size: 0.9rem;">
-                            <strong>Description:</strong> <span id="preview-description-value">{{description}}</span>
+                            <strong>{{#str}}descriptionlabel, local_haccgen{{/str}}</strong> <span id="preview-description-value">{{description}}</span>
                         </p>
                         {{/description}}
-                        <!-- Optional PDF Info -->
+
                         {{#pdfuploaded}}
                         <p id="preview-pdf" style="color: #666; font-size: 0.9rem;">
-                            <strong>PDF Uploaded:</strong> <span id="preview-pdf-value">{{pdfuploaded}}</span>
+                            <strong>{{#str}}pdfuploaded, local_haccgen{{/str}}</strong> <span id="preview-pdf-value">{{pdfuploaded}}</span>
                         </p>
                         {{/pdfuploaded}}
                     </div>
@@ -195,11 +227,25 @@
             </div>
         </div>
     </div>
+    {{/statusactive}}
+
+    {{^statusactive}}
+    <!-- ================= INACTIVE (EXPIRED / ERROR) ================= -->
+    <div class="form-group d-flex justify-content-between" style="margin-left: 280px;">
+        <a href="{{cancelurl}}" class="btn btn-secondary modern-btn modern-btn-secondary">
+            {{#str}}back, local_haccgen{{/str}}
+        </a>
+    </div>
+    {{/statusactive}}
+
 </div>
+</body>
+
+
 
 <style>
 /* General Layout */
-.aicourse-container {
+.haccgen-container {
     padding: 20px;
     background: #ffffff;
     min-height: 100vh;
@@ -513,6 +559,7 @@ a {
     from { opacity: 0; transform: translateX(20px); }
     to { opacity: 1; transform: translateX(0); }
 }
+
 .help-hover{
     margin-bottom: 5px;
 }
@@ -521,277 +568,358 @@ a {
     color: #fff !important;
     border-color: #0056b3 #0056b3 #0069cc !important;
 }
+
 </style>
 
 <script>
 try {
-    document.addEventListener('DOMContentLoaded', function() {
-        // Only run for step 1
-        const stepInput = document.querySelector('input[name="step"]');
-        if (stepInput && stepInput.value !== '1') {
-            console.log('Skipping ai_form JavaScript for step != 1');
-            return;
+  document.addEventListener('DOMContentLoaded', function () {
+    // Only run for step 1
+   const stepInput = document.querySelector('input[name="step"]');
+// allow step 1,2,3,4
+if (!stepInput) return;
+
+
+ let activelang = '';
+ function buildLanguagePrompt(lang) {
+    const L = (lang || '').trim();
+    return L
+      ? `[AI Language]: ${L}\nPlease generate all content in ${L}, and localize terminology, examples, UI labels, and tone accordingly.`
+      : '';
+  }
+
+  (function () {
+  const LANG_OPTIONS = [
+    'English',
+    'हिन्दी (Hindi)',
+    'తెలుగు (Telugu)',
+    'தமிழ் (Tamil)',
+    'ಕನ್ನಡ (Kannada)',
+    'বাংলা (Bengali)'
+  ];
+
+  const selectEl = document.getElementById('language-select');
+  const hiddenEl = document.getElementById('active-lang');
+  const promptEl = document.getElementById('lang-prompt');
+
+  // Populate dropdown
+  LANG_OPTIONS.forEach(lang => {
+    const opt = document.createElement('option');
+    opt.value = lang;
+    opt.textContent = lang;
+    selectEl.appendChild(opt);
+  });
+
+  function guessFromNavigator() {
+    const nav = (navigator.language || navigator.userLanguage || '').toLowerCase();
+    if (!nav) return '';
+
+    if (nav.startsWith('en')) return 'English';
+    if (nav.startsWith('hi')) return 'हिन्दी (Hindi)';
+    if (nav.startsWith('te')) return 'తెలుగు (Telugu)';
+    if (nav.startsWith('ta')) return 'தமிழ் (Tamil)';
+    if (nav.startsWith('kn')) return 'ಕನ್ನಡ (Kannada)';
+    if (nav.startsWith('bn')) return 'বাংলা (Bengali)';
+
+    return '';
+  }
+
+    // Populate dropdown
+    function fillOptions() {
+      selectEl.innerHTML = '';
+      LANG_OPTIONS.forEach(l => {
+        const opt = document.createElement('option');
+        opt.value = l;
+        opt.textContent = l;
+        selectEl.appendChild(opt);
+      });
+    }
+    
+
+    function applyLang(lang) {
+      activelang = (lang || '').trim();
+      hiddenEl.value = activelang;
+      if (promptEl) promptEl.textContent = buildLanguagePrompt(activelang);
+      try { localStorage.setItem('haccgen_activelang', activelang); } catch(e) {}
+    }
+
+    function bootstrapLang() {
+      const saved = (() => {
+        try { return localStorage.getItem('haccgen_activelang') || ''; } catch(e) { return ''; }
+      })();
+      const initial = saved || guessFromNavigator() || LANG_OPTIONS[0];
+      const idx = LANG_OPTIONS.indexOf(initial);
+      selectEl.selectedIndex = idx >= 0 ? idx : 0;
+      applyLang(selectEl.value);
+    }
+
+    selectEl.addEventListener('change', () => applyLang(selectEl.value));
+    fillOptions();
+    bootstrapLang();
+    window.getActiveLang = () => hiddenEl.value;
+  })();
+
+    // remove any existing language prompt block (1–2 lines)
+    function stripLangPrompt(text) {
+      if (!text) return '';
+      // remove a line starting with [AI Language]: and the immediate next line (if present)
+      return text
+        .replace(/\s*\[AI Language\]:[^\n]*(?:\n[^\n]*)?/gi, '')
+        .trim();
+    }
+
+    // Elements for toggling form sections
+    const form            = document.getElementById('haccgen-form');
+    const radioButtons    = document.querySelectorAll('input[name="generationtype"]');
+    const aiFields        = document.getElementById('ai-generation-fields');
+    const uploadedFields  = document.getElementById('uploaded-content-fields');
+
+    // Elements for AI generation
+    const tagInputAI         = document.getElementById('tag-input-ai');
+    const tagContainerAI     = document.getElementById('tag-container-ai');
+    const hiddenInputAI      = document.getElementById('targetaudience-hidden-ai');
+    const TOPICTITLEInputAI  = document.getElementById('TOPICTITLE_ai');
+    const descriptionInputAI = document.getElementById('description_ai');
+    let tagsAI = [];
+
+    // Uploaded content elements
+    const tagInputUploaded         = document.getElementById('tag-input-uploaded');
+    const tagContainerUploaded     = document.getElementById('tag-container-uploaded');
+    const hiddenInputUploaded      = document.getElementById('targetaudience-hidden-uploaded');
+    const TOPICTITLEInputUploaded  = document.getElementById('TOPICTITLE_uploaded');
+    const pdfInput                 = document.getElementById('pdf_upload');
+    const descriptionInputUploaded = document.getElementById('description_uploaded');
+    let tagsUploaded = [];
+
+    // Preview elements
+    const previewTitle            = document.getElementById('preview-title');
+    const previewAudience         = document.getElementById('preview-audience');
+    const previewDescription      = document.getElementById('preview-description');
+    const previewDescriptionValue = document.getElementById('preview-description-value');
+    const previewPdf              = document.getElementById('preview-pdf');
+    const previewPdfValue         = document.getElementById('preview-pdf-value');
+
+    // ✅ on load: strip any prompt that slipped into textareas from previous submits
+    if (descriptionInputAI)        descriptionInputAI.value        = stripLangPrompt(descriptionInputAI.value);
+    if (descriptionInputUploaded)  descriptionInputUploaded.value  = stripLangPrompt(descriptionInputUploaded.value);
+
+    // Load initial tags
+    const initialTagsAI = '{{targetaudience}}'.split(',').filter(t => t.trim() !== '');
+    tagsAI = [...initialTagsAI];
+    if (tagContainerAI && hiddenInputAI) updateTagsAI();
+
+    const initialTagsUploaded = '{{targetaudience_uploaded}}'.split(',').filter(t => t.trim() !== '');
+    tagsUploaded = [...initialTagsUploaded];
+    if (tagContainerUploaded && hiddenInputUploaded) updateTagsUploaded();
+
+    // Toggle sections
+    function toggleFields(mode) {
+      const isAi = mode === 'ai';
+      if (aiFields) aiFields.style.display = isAi ? 'block' : 'none';
+      if (uploadedFields) uploadedFields.style.display = isAi ? 'none' : 'block';
+
+      // AI inputs
+      [TOPICTITLEInputAI, tagInputAI, hiddenInputAI, descriptionInputAI]
+        .forEach(input => {
+          if (!input) return;
+          input.disabled = !isAi;
+          if (!isAi && input !== descriptionInputAI) input.value = '';
+          if (input && input.id === 'TOPICTITLE_ai') input.required = isAi;
+        });
+
+      // Uploaded inputs
+      [TOPICTITLEInputUploaded, tagInputUploaded, hiddenInputUploaded, pdfInput, descriptionInputUploaded]
+        .forEach(input => {
+          if (!input) return;
+          input.disabled = isAi;
+          if (isAi) input.value = '';
+          if (input && (input.id === 'TOPICTITLE_uploaded' || input.id === 'pdf_upload')) {
+            input.required = !isAi;
+          }
+        });
+
+      updatePreview(mode);
+    }
+
+    if (radioButtons && aiFields && uploadedFields) {
+      radioButtons.forEach(radio => {
+        radio.addEventListener('change', function () {
+          toggleFields(this.value);
+        });
+      });
+      const selectedRadio = document.querySelector('input[name="generationtype"]:checked');
+      toggleFields(selectedRadio ? selectedRadio.value : 'ai');
+    }
+
+    // Tag handlers (AI)
+    if (tagInputAI) {
+      tagInputAI.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); addTagAI(); }
+      });
+      tagInputAI.addEventListener('blur', addTagAI);
+    }
+    function addTagAI() {
+      if (!tagInputAI || !hiddenInputAI) return;
+      const tag = tagInputAI.value.trim();
+      if (tag && !tagsAI.includes(tag)) {
+        tagsAI.push(tag);
+        tagInputAI.value = '';
+        updateTagsAI(); updatePreview('ai');
+      }
+    }
+    function updateTagsAI() {
+      if (!tagContainerAI || !hiddenInputAI) return;
+      tagContainerAI.innerHTML = '';
+      tagsAI.forEach((tag, i) => {
+        const el = document.createElement('span');
+        el.className = 'tag';
+        el.innerHTML = `${tag} <span class="remove-tag" data-index="${i}">×</span>`;
+        tagContainerAI.appendChild(el);
+      });
+      hiddenInputAI.value = tagsAI.join(',');
+      tagContainerAI.appendChild(tagInputAI);
+      tagInputAI.focus();
+      document.querySelectorAll('.remove-tag').forEach(btn => {
+        btn.addEventListener('click', function () {
+          const i = this.getAttribute('data-index');
+          tagsAI.splice(i, 1);
+          updateTagsAI(); updatePreview('ai');
+        });
+      });
+    }
+
+    // Tag handlers (Uploaded)
+    if (tagInputUploaded) {
+      tagInputUploaded.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); addTagUploaded(); }
+      });
+      tagInputUploaded.addEventListener('blur', addTagUploaded);
+    }
+    function addTagUploaded() {
+      if (!tagInputUploaded || !hiddenInputUploaded) return;
+      const tag = tagInputUploaded.value.trim();
+      if (tag && !tagsUploaded.includes(tag)) {
+        tagsUploaded.push(tag);
+        tagInputUploaded.value = '';
+        updateTagsUploaded(); updatePreview('uploaded');
+      }
+    }
+    function updateTagsUploaded() {
+      if (!tagContainerUploaded || !hiddenInputUploaded) return;
+      tagContainerUploaded.innerHTML = '';
+      tagsUploaded.forEach((tag, i) => {
+        const el = document.createElement('span');
+        el.className = 'tag';
+        el.innerHTML = `${tag} <span class="remove-tag" data-index="${i}">×</span>`;
+        tagContainerUploaded.appendChild(el);
+      });
+      hiddenInputUploaded.value = tagsUploaded.join(',');
+      tagContainerUploaded.appendChild(tagInputUploaded);
+      tagInputUploaded.focus();
+      document.querySelectorAll('.remove-tag').forEach(btn => {
+        btn.addEventListener('click', function () {
+          const i = this.getAttribute('data-index');
+          tagsUploaded.splice(i, 1);
+          updateTagsUploaded(); updatePreview('uploaded');
+        });
+      });
+    }
+
+    // Preview updater
+    function updatePreview(mode) {
+      let title, audience, description;
+      if (mode === 'ai') {
+        title = TOPICTITLEInputAI ? TOPICTITLEInputAI.value.trim() : '';
+        audience = tagsAI.join(', ');
+        description = descriptionInputAI ? descriptionInputAI.value.trim() : '';
+        if (previewTitle) previewTitle.textContent = title || 'TOPIC TITLE';
+        if (previewAudience) previewAudience.textContent = `This course is on ${title || 'TOPIC TITLE'} with ${audience || 'Target Audience'}.`;
+        if (previewDescription) {
+          previewDescription.style.display = description ? 'block' : 'none';
+          if (previewDescriptionValue) previewDescriptionValue.textContent = description || '';
         }
-
-        // Elements for toggling form sections
-        const radioButtons = document.querySelectorAll('input[name="generation_type"]');
-        const aiFields = document.getElementById('ai-generation-fields');
-        const uploadedFields = document.getElementById('uploaded-content-fields');
-
-        // Elements for AI generation
-        const tagInputAI = document.getElementById('tag-input-ai');
-        const tagContainerAI = document.getElementById('tag-container-ai');
-        const hiddenInputAI = document.getElementById('targetaudience-hidden-ai');
-        const TOPICTITLEInputAI = document.getElementById('TOPICTITLE_ai');
-        const descriptionInputAI = document.getElementById('description_ai');
-        let tagsAI = [];
-
-        // Elements for Uploaded Content
-        const tagInputUploaded = document.getElementById('tag-input-uploaded');
-        const tagContainerUploaded = document.getElementById('tag-container-uploaded');
-        const hiddenInputUploaded = document.getElementById('targetaudience-hidden-uploaded');
-        const TOPICTITLEInputUploaded = document.getElementById('TOPICTITLE_uploaded');
-        const pdfInput = document.getElementById('pdf_upload');
-        const descriptionInputUploaded = document.getElementById('description_uploaded');
-        let tagsUploaded = [];
-
-        // Preview elements
-        const previewTitle = document.getElementById('preview-title');
-        const previewAudience = document.getElementById('preview-audience');
-        const previewDescription = document.getElementById('preview-description');
-        const previewDescriptionValue = document.getElementById('preview-description-value');
-        const previewPdf = document.getElementById('preview-pdf');
-        const previewPdfValue = document.getElementById('preview-pdf-value');
-
-        // Log elements for debugging
-        console.log('previewDescription:', previewDescription);
-        console.log('previewPdf:', previewPdf);
-        console.log('TOPICTITLEInputAI:', TOPICTITLEInputAI);
-        console.log('tagInputAI:', tagInputAI);
-        console.log('descriptionInputAI:', descriptionInputAI);
-        console.log('TOPICTITLEInputUploaded:', TOPICTITLEInputUploaded);
-        console.log('tagInputUploaded:', tagInputUploaded);
-        console.log('descriptionInputUploaded:', descriptionInputUploaded);
-        console.log('pdfInput:', pdfInput);
-
-        // Load initial tags for AI generation
-        const initialTagsAI = '{{targetaudience}}'.split(',').filter(tag => tag.trim() !== '');
-        tagsAI = [...initialTagsAI];
-        if (tagContainerAI && hiddenInputAI) updateTagsAI();
-
-        // Load initial tags for Uploaded Content
-        const initialTagsUploaded = '{{targetaudience_uploaded}}'.split(',').filter(tag => tag.trim() !== '');
-        tagsUploaded = [...initialTagsUploaded];
-        // tagsUploaded = [...initialTagsAI];
-        if (tagContainerUploaded && hiddenInputUploaded) updateTagsUploaded();
-
-        // Toggle form fields based on radio button selection
-        function toggleFields(mode) {
-            const isAi = mode === 'ai';
-            aiFields.style.display = isAi ? 'block' : 'none';
-            uploadedFields.style.display = isAi ? 'none' : 'block';
-
-            // AI fields
-            const aiInputs = [
-                TOPICTITLEInputAI,
-                tagInputAI,
-                hiddenInputAI,
-                descriptionInputAI
-            ];
-            aiInputs.forEach(input => {
-                if (input) {
-                    input.disabled = !isAi;
-                    if (!isAi) input.value = ''; // Clear value
-                    input.required = isAi && input.id === 'TOPICTITLE_ai';
-                }
-            });
-
-            // Uploaded fields
-            const uploadedInputs = [
-                TOPICTITLEInputUploaded,
-                tagInputUploaded,
-                hiddenInputUploaded,
-                pdfInput,
-                descriptionInputUploaded
-            ];
-            uploadedInputs.forEach(input => {
-                if (input) {
-                    input.disabled = isAi;
-                    if (isAi) input.value = ''; // Clear value
-                    input.required = !isAi && (input.id === 'TOPICTITLE_uploaded' || input.id === 'pdf_upload');
-                }
-            });
-
-            updatePreview(mode);
+        if (previewPdf) previewPdf.style.display = 'none';
+      } else {
+        title = TOPICTITLEInputUploaded ? TOPICTITLEInputUploaded.value.trim() : '';
+        audience = tagsUploaded.join(', ');
+        description = descriptionInputUploaded ? descriptionInputUploaded.value.trim() : '';
+        const pdfFile = pdfInput && pdfInput.files[0];
+        if (previewTitle) previewTitle.textContent = title || 'TOPIC TITLE';
+        if (previewAudience) previewAudience.textContent = `This course is on ${title || 'TOPIC TITLE'} with ${audience || 'Target Audience'}.`;
+        if (previewDescription) {
+          previewDescription.style.display = description ? 'block' : 'none';
+          if (previewDescriptionValue) previewDescriptionValue.textContent = description || '';
         }
-
-        if (radioButtons && aiFields && uploadedFields) {
-            radioButtons.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    toggleFields(this.value);
-                });
-            });
-            // Trigger initial toggle
-            const selectedRadio = document.querySelector('input[name="generation_type"]:checked');
-            toggleFields(selectedRadio ? selectedRadio.value : 'ai');
+        if (previewPdf) {
+          previewPdf.style.display = pdfFile ? 'block' : 'none';
+          if (previewPdfValue) previewPdfValue.textContent = pdfFile ? pdfFile.name : '';
         }
+      }
 
-        // Tag handling for AI generation
-        if (tagInputAI) {
-            tagInputAI.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === ',') {
-                    e.preventDefault();
-                    addTagAI();
-                }
-            });
+      // slide-in animation reset
+      if (previewTitle) previewTitle.style.animation = 'none';
+      if (previewAudience) previewAudience.style.animation = 'none';
+      if (previewDescription) previewDescription.style.animation = 'none';
+      if (previewPdf) previewPdf.style.animation = 'none';
+      setTimeout(() => {
+        if (previewTitle) previewTitle.style.animation = 'slideIn 0.5s ease';
+        if (previewAudience) previewAudience.style.animation = 'slideIn 0.5s ease 0.2s';
+        if (description && previewDescription) previewDescription.style.animation = 'slideIn 0.5s ease 0.4s';
+        if (pdfInput && pdfInput.files && pdfInput.files[0] && previewPdf) previewPdf.style.animation = 'slideIn 0.5s ease 0.6s';
+      }, 10);
+    }
 
-            tagInputAI.addEventListener('blur', function() {
-                addTagAI();
-            });
-        }
+    // Live preview bindings
+    if (TOPICTITLEInputAI) TOPICTITLEInputAI.addEventListener('input', () => updatePreview('ai'));
+    if (tagInputAI) tagInputAI.addEventListener('input', () => updatePreview('ai'));
+    if (descriptionInputAI) descriptionInputAI.addEventListener('input', () => updatePreview('ai'));
+    if (TOPICTITLEInputUploaded) TOPICTITLEInputUploaded.addEventListener('input', () => updatePreview('uploaded'));
+    if (tagInputUploaded) tagInputUploaded.addEventListener('input', () => updatePreview('uploaded'));
+    if (descriptionInputUploaded) descriptionInputUploaded.addEventListener('input', () => updatePreview('uploaded'));
+    if (pdfInput) pdfInput.addEventListener('change', () => updatePreview('uploaded'));
 
-        function addTagAI() {
-            if (!tagInputAI || !hiddenInputAI) return;
-            const tag = tagInputAI.value.trim();
-            if (tag && !tagsAI.includes(tag)) {
-                tagsAI.push(tag);
-                tagInputAI.value = '';
-                updateTagsAI();
-                updatePreview('ai');
-            }
-        }
+// Submit-time: append prompt for processing, keep UI clean
+if (form) {
+  form.addEventListener('submit', function () {
+    const lang = (window.getActiveLang && window.getActiveLang()) || activelang || '';
 
-        function updateTagsAI() {
-            if (!tagContainerAI || !hiddenInputAI) return;
-            tagContainerAI.innerHTML = '';
-            tagsAI.forEach((tag, index) => {
-                const tagElement = document.createElement('span');
-                tagElement.className = 'tag';
-                tagElement.innerHTML = `${tag} <span class="remove-tag" data-index="${index}">×</span>`;
-                tagContainerAI.appendChild(tagElement);
-            });
-            hiddenInputAI.value = tagsAI.join(',');
-            tagContainerAI.appendChild(tagInputAI);
-            tagInputAI.focus();
+    // Ensure activelang is submitted even if the hidden input is outside the <form>
+    let langField = form.querySelector('input[name="activelang"]');
+    if (!langField) {
+      langField = document.createElement('input');
+      langField.type = 'hidden';
+      langField.name = 'activelang';
+      form.appendChild(langField);
+    }
+    langField.value = lang;
 
-            document.querySelectorAll('.remove-tag').forEach(button => {
-                button.addEventListener('click', function() {
-                    const index = this.getAttribute('data-index');
-                    tagsAI.splice(index, 1);
-                    updateTagsAI();
-                    updatePreview('ai');
-                });
-            });
-        }
+    // (your existing code below)
+    const prompt = buildLanguagePrompt(lang);
+    const selectedRadio = document.querySelector('input[name="generationtype"]:checked');
+    const mode = (selectedRadio && selectedRadio.value) || 'ai';
 
-        // Tag handling for Uploaded Content
-        if (tagInputUploaded) {
-            tagInputUploaded.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === ',') {
-                    e.preventDefault();
-                    addTagUploaded();
-                }
-            });
+    const rawAI = stripLangPrompt((document.getElementById('description_ai') || {}).value || '');
+    const rawUploaded = stripLangPrompt((document.getElementById('description_uploaded') || {}).value || '');
+    const raw = (mode === 'ai') ? rawAI : rawUploaded;
 
-            tagInputUploaded.addEventListener('blur', function() {
-                addTagUploaded();
-            });
-        }
+    const withPrompt = prompt ? (raw ? (raw + '\n\n' + prompt) : prompt) : raw;
 
-        function addTagUploaded() {
-            if (!tagInputUploaded || !hiddenInputUploaded) return;
-            const tag = tagInputUploaded.value.trim();
-            if (tag && !tagsUploaded.includes(tag)) {
-                tagsUploaded.push(tag);
-                tagInputUploaded.value = '';
-                updateTagsUploaded();
-                updatePreview('uploaded');
-            }
-        }
+    const h1 = document.createElement('input');
+    h1.type = 'hidden'; h1.name = 'description_raw'; h1.value = raw; form.appendChild(h1);
 
-        function updateTagsUploaded() {
-            if (!tagContainerUploaded || !hiddenInputUploaded) return;
-            tagContainerUploaded.innerHTML = '';
-            tagsUploaded.forEach((tag, index) => {
-                const tagElement = document.createElement('span');
-                tagElement.className = 'tag';
-                tagElement.innerHTML = `${tag} <span class="remove-tag" data-index="${index}">×</span>`;
-                tagContainerUploaded.appendChild(tagElement);
-            });
-            hiddenInputUploaded.value = tagsUploaded.join(',');
-            tagContainerUploaded.appendChild(tagInputUploaded);
-            tagInputUploaded.focus();
+    const h2 = document.createElement('input');
+    h2.type = 'hidden'; h2.name = 'description_with_prompt'; h2.value = withPrompt; form.appendChild(h2);
 
-            document.querySelectorAll('.remove-tag').forEach(button => {
-                button.addEventListener('click', function() {
-                    const index = this.getAttribute('data-index');
-                    tagsUploaded.splice(index, 1);
-                    updateTagsUploaded();
-                    updatePreview('uploaded');
-                });
-            });
-        }
+    const main = document.createElement('input');
+    main.type = 'hidden'; main.name = 'description'; main.value = withPrompt; form.appendChild(main);
+  });
+}
 
-        // Update preview dynamically with animation
-        function updatePreview(mode) {
-            let title, audience, description;
 
-            if (mode === 'ai') {
-                title = TOPICTITLEInputAI ? TOPICTITLEInputAI.value.trim() : '';
-                audience = tagsAI.join(', ');
-                description = descriptionInputAI ? descriptionInputAI.value.trim() : '';
-                if (previewTitle) previewTitle.textContent = title || 'TOPIC TITLE';
-                if (previewAudience) previewAudience.textContent = `This course is on ${title || 'TOPIC TITLE'} with ${audience || 'Target Audience'}.`;
-                if (previewDescription) {
-                    previewDescription.style.display = description ? 'block' : 'none';
-                    if (previewDescriptionValue) previewDescriptionValue.textContent = description || '';
-                }
-                if (previewPdf) previewPdf.style.display = 'none';
-            } else {
-                title = TOPICTITLEInputUploaded ? TOPICTITLEInputUploaded.value.trim() : '';
-                audience = tagsUploaded.join(', ');
-                description = descriptionInputUploaded ? descriptionInputUploaded.value.trim() : '';
-                const pdfFile = pdfInput && pdfInput.files[0];
-                if (previewTitle) previewTitle.textContent = title || 'TOPIC TITLE';
-                if (previewAudience) previewAudience.textContent = `This course is on ${title || 'TOPIC TITLE'} with ${audience || 'Target Audience'}.`;
-                if (previewDescription) {
-                    previewDescription.style.display = description ? 'block' : 'none';
-                    if (previewDescriptionValue) previewDescriptionValue.textContent = description || '';
-                }
-                if (previewPdf) {
-                    previewPdf.style.display = pdfFile ? 'block' : 'none';
-                    if (previewPdfValue) previewPdfValue.textContent = pdfFile ? pdfFile.name : '';
-                }
-            }
-
-            // Trigger slide-in animation on update
-            if (previewTitle) previewTitle.style.animation = 'none';
-            if (previewAudience) previewAudience.style.animation = 'none';
-            if (previewDescription) previewDescription.style.animation = 'none';
-            if (previewPdf) previewPdf.style.animation = 'none';
-            setTimeout(() => {
-                if (previewTitle) previewTitle.style.animation = 'slideIn 0.5s ease';
-                if (previewAudience) previewAudience.style.animation = 'slideIn 0.5s ease 0.2s';
-                if (description && previewDescription) previewDescription.style.animation = 'slideIn 0.5s ease 0.4s';
-                if (mode === 'uploaded' && pdfInput && pdfInput.files[0] && previewPdf) previewPdf.style.animation = 'slideIn 0.5s ease 0.6s';
-            }, 10);
-        }
-
-        // Update preview on input change
-        if (TOPICTITLEInputAI) TOPICTITLEInputAI.addEventListener('input', () => updatePreview('ai'));
-        if (tagInputAI) tagInputAI.addEventListener('input', () => updatePreview('ai'));
-        if (descriptionInputAI) descriptionInputAI.addEventListener('input', () => updatePreview('ai'));
-        if (TOPICTITLEInputUploaded) TOPICTITLEInputUploaded.addEventListener('input', () => updatePreview('uploaded'));
-        if (tagInputUploaded) tagInputUploaded.addEventListener('input', () => updatePreview('uploaded'));
-        if (descriptionInputUploaded) descriptionInputUploaded.addEventListener('input', () => updatePreview('uploaded'));
-        if (pdfInput) pdfInput.addEventListener('change', () => updatePreview('uploaded'));
-
-        // Initial preview update
-        updatePreview('ai');
-    });
+    // Initial preview update
+    updatePreview('ai');
+  });
 } catch (error) {
-    console.error('JavaScript error in ai_form.mustache:', error);
+  console.error('JavaScript error in ai_form.mustache:', error);
 }
 </script>
-</body>
-</html>

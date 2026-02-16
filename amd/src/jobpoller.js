@@ -1,10 +1,28 @@
 /**
- * Poll the background job until it is done/failed.
+ * This file is part of Moodle - http://moodle.org/
  *
- * @module     local_aicourse/jobpoller
- * @copyright  …
- * @license    …
+ * Moodle is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Moodle is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+/**
+ * Poll the background job until it is done or failed.
+ *
+ * @module     local_haccgen/jobpoller
+ * @copyright  2026 Dynamicpixel Multimedia Solutions
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 define(['core/ajax', 'core/notification'], function(Ajax, Notification) {
 
     /**
@@ -13,14 +31,14 @@ define(['core/ajax', 'core/notification'], function(Ajax, Notification) {
      */
     const init = function(jobid) {
 
-        const spinner = document.getElementById('aicourse-spinner');
+        const spinner = document.getElementById('haccgen-spinner');
         if (spinner) {
             spinner.classList.remove('hidden');
         }
 
         const poll = function() {
             Ajax.call([{
-                methodname : 'local_aicourse_check_job',
+                methodname : 'local_haccgen_check_job',
                 args       : { jobid: jobid }
             }])[0].then(function(data) {
 
@@ -46,5 +64,5 @@ define(['core/ajax', 'core/notification'], function(Ajax, Notification) {
         poll();
     };
 
-    return /** @alias module:local_aicourse/jobpoller */ { init: init };
+    return /** @alias module:local_haccgen/jobpoller */ { init: init };
 });

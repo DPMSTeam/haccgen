@@ -1,0 +1,73 @@
+{{! 
+This file is part of Moodle
+
+ISO Latin-1 encoding translations
+Source: PostScript::ISOLatin1Encoding (Perl)
+
+@package local_haccgen
+@copyright 2026 Dynamicpixel Multimedia Solutions
+@license GNU GPL v3 or later
+}}
+
+<div style="display:flex; gap:30px; flex-wrap:wrap; align-items:stretch; margin:25px 0;">
+
+    <!-- Preview Block -->
+    <div style="flex:1 1 500px; min-width:320px; max-width:720px;">
+        <div style="width:100%; background:#ffffffcc; backdrop-filter:blur(8px);
+                    border-radius:16px; padding:24px 28px; box-shadow:0 8px 24px rgba(0,0,0,0.08);
+                    transition:transform 0.25s ease, box-shadow 0.25s ease;">
+
+            <!-- Header -->
+            <div style="margin-bottom:20px; text-align:center;">
+                <h2 style="font-size:1.6rem; font-weight:700; margin:0; color:#2a3d66;">
+                    {{TOPICTITLE}}
+                </h2>
+                <p style="font-size:1rem; color:#5a6a85; margin-top:6px;">
+                    {{#str}}courseisfor, local_haccgen, {"title": "{{TOPICTITLE}}", "audience": "{{targetaudience}}"}{{/str}}
+                </p>
+            </div>
+
+            <!-- Meta Info -->
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:15px; margin:20px 0;">
+                <div style="display:flex; align-items:flex-start; gap:10px; background:#f5f8fc;
+                            border-radius:12px; padding:12px 14px;">
+                    <div>
+                        <span style="display:block; font-size:0.85rem; color:#6b7b93;">{{#str}}levelofunderstanding, local_haccgen{{/str}}</span>
+                        <span style="font-size:1rem; font-weight:500; color:#2a3d66;">{{levelofunderstanding}}</span>
+                    </div>
+                </div>
+
+                <div style="display:flex; align-items:flex-start; gap:10px; background:#f5f8fc;
+                            border-radius:12px; padding:12px 14px;">
+                    <div>
+                        <span style="display:block; font-size:0.85rem; color:#6b7b93;">{{#str}}toneofnarrative, local_haccgen{{/str}}</span>
+                        <span style="font-size:1rem; font-weight:500; color:#2a3d66;">{{toneofnarrative}}</span>
+                    </div>
+                </div>
+
+                <div style="display:flex; align-items:flex-start; gap:10px; background:#f5f8fc;
+                            border-radius:12px; padding:12px 14px;">
+                    <div>
+                        <span style="display:block; font-size:0.85rem; color:#6b7b93;">{{#str}}courseduration, local_haccgen{{/str}}</span>
+                        <span style="font-size:1rem; font-weight:500; color:#2a3d66;">{{courseduration}}</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Objectives Block -->
+    <div style="flex:1 1 500px; min-width:320px; max-width:720px;">
+        <h2 style="font-size:1.6rem; font-weight:700; margin:0 0 16px 0; color:#2a3d66; text-align:center;">
+            {{learning_objectives_heading}}
+        </h2>
+
+        <div style="width:100%; background:#ffffffcc; backdrop-filter:blur(8px);
+                    border-radius:16px; padding:24px 28px; box-shadow:0 8px 24px rgba(0,0,0,0.08);
+                    transition:transform 0.25s ease, box-shadow 0.25s ease;">
+            {{{ objectives_html }}}
+        </div>
+    </div>
+
+</div>

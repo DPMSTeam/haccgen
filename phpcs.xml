@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<ruleset name="local_haccgen">
+  <description>PHPCS exclusions for bundled third-party libraries.</description>
+
+  <!-- Moodle standard (what codechecker uses) -->
+  <rule ref="moodle"/>
+
+  <!-- Exclude third-party libraries -->
+  <exclude-pattern>*/.extlib/*</exclude-pattern>
+</ruleset>

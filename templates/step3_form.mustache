@@ -1,3 +1,13 @@
+{{! 
+This file is part of Moodle
+
+ISO Latin-1 encoding translations
+Source: PostScript::ISOLatin1Encoding (Perl)
+
+@package local_haccgen
+@copyright 2026 Dynamicpixel Multimedia Solutions
+@license GNU GPL v3 or later
+}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +18,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         /* General Layout */
-        .aicourse-container {
+        .haccgen-container {
             padding: 20px;
             background: #ffffff;
             min-height: 100vh;
@@ -230,10 +240,19 @@
                 margin-top: 20px;
             }
         }
+        .help-hover{
+    margin-bottom: 5px;
+}
+.secondary-navigation .moremenu .nav-tabs .nav-link.active {
+    background-color: #0069cc !important;
+    color: #fff !important;
+    border-color: #0056b3 #0056b3 #0069cc !important;
+}
+
     </style>
 </head>
 <body>
-    <div class="container-fluid aicourse-container">
+    <div class="container-fluid haccgen-container">
         <div class="row">
             <!-- Left Side: Input Section (col-md-7) -->
             <div class="col-md-7">
@@ -243,11 +262,13 @@
                             {{errors.general}}
                         </div>
                     {{/errors.general}}
-                    <form action="{{action}}" method="post" id="aicourse-form">
+                    <form action="{{action}}" method="post" id="haccgen-form">
                         <input type="hidden" name="id" value="{{courseid}}">
                         <input type="hidden" name="step" value="{{currentstep}}">
-                        <input type="hidden" name="generation_type" value="{{generation_type}}">
+                        <input type="hidden" name="generationtype" value="{{generationtype}}">
                         <input type="hidden" name="topic_order" id="topic-order">
+                        <input type="hidden" name="activelang" id="active-lang-step3" value="{{activelang}}">
+
 
                         <!-- Topics List -->
                         <div id="topics-wrapper">
@@ -263,18 +284,18 @@
                                 </div>
                             {{/topics}}
                             {{^topics}}
-                                <p>{{#str}}notopics, local_aicourse{{/str}}</p>
-                                <button type="button" class="btn modern-btn modern-btn-secondary" onclick="window.location.href='{{action}}?id={{courseid}}&step=1'">{{#str}}returntostep1, local_aicourse{{/str}}</button>
+                                <p>{{#str}}notopics, local_haccgen{{/str}}</p>
+                                <button type="button" class="btn modern-btn modern-btn-secondary" onclick="window.location.href='{{action}}?id={{courseid}}&step=1'">{{#str}}returntostep1, local_haccgen{{/str}}</button>
                             {{/topics}}
                         </div>
 
                         <!-- Add More Topics Button -->
-                        <button type="button" id="add-topic-btn" class="btn modern-btn modern-btn-primary mt-3">{{#str}}addtopic, local_aicourse{{/str}}</button>
+                        <button type="button" id="add-topic-btn" class="btn modern-btn modern-btn-primary mt-3">{{#str}}addtopic, local_haccgen{{/str}}</button>
 
                         <!-- Form Buttons -->
-                        <div class="d-flex justify-content-between mt-4">
-                            <button type="submit" name="action" value="back" class="btn modern-btn modern-btn-secondary">{{#str}}back, local_aicourse{{/str}}</button>
-                            <button type="submit" name="action" value="save" class="btn modern-btn modern-btn-primary" id="save-btn">{{#str}}generate, local_aicourse{{/str}}</button>
+                         <div class="form-group d-flex justify-content-start gap-2 mt-4">
+                            <button type="submit" name="action" value="back" class="btn modern-btn modern-btn-secondary">{{#str}}back, local_haccgen{{/str}}</button>
+                            <button type="submit" name="action" value="save" class="btn modern-btn modern-btn-primary" id="save-btn">{{#str}}generate, local_haccgen{{/str}}</button>
                         </div>
                     </form>
                 </div>
@@ -283,44 +304,44 @@
             <!-- Right Side: Preview Section (col-md-5) -->
             <div class="col-md-5">
                 <div class="step-progress-bar">
-                    <div class="step {{#step_states.is_step1_active}}step-active{{/step_states.is_step1_active}}" data-tooltip="{{#str}}basics, local_aicourse{{/str}}">
-                        <span class="step-circle {{#step_states.is_step1_active}}step-circle-active{{/step_states.is_step1_active}}"></span>
-                        <span class="step-label">{{#str}}basics, local_aicourse{{/str}}</span>
+                    <div class="step {{#stepstates.is_step1_active}}step-active{{/stepstates.is_step1_active}}" data-tooltip="{{#str}}basics, local_haccgen{{/str}}">
+                        <span class="step-circle {{#stepstates.is_step1_active}}step-circle-active{{/stepstates.is_step1_active}}"></span>
+                        <span class="step-label">{{#str}}basics, local_haccgen{{/str}}</span>
                     </div>
-                    <div class="step-connector {{#step_states.is_connector1_active}}connector-active{{/step_states.is_connector1_active}}"></div>
-                    <div class="step {{#step_states.is_step2_active}}step-active{{/step_states.is_step2_active}}" data-tooltip="{{#str}}details, local_aicourse{{/str}}">
-                        <span class="step-circle {{#step_states.is_step2_active}}step-circle-active{{/step_states.is_step2_active}}"></span>
-                        <span class="step-label">{{#str}}details, local_aicourse{{/str}}</span>
+                    <div class="step-connector {{#stepstates.is_connector1_active}}connector-active{{/stepstates.is_connector1_active}}"></div>
+                    <div class="step {{#stepstates.is_step2_active}}step-active{{/stepstates.is_step2_active}}" data-tooltip="{{#str}}details, local_haccgen{{/str}}">
+                        <span class="step-circle {{#stepstates.is_step2_active}}step-circle-active{{/stepstates.is_step2_active}}"></span>
+                        <span class="step-label">{{#str}}details, local_haccgen{{/str}}</span>
                     </div>
-                    <div class="step-connector {{#step_states.is_connector2_active}}connector-active{{/step_states.is_connector2_active}}"></div>
-                    <div class="step {{#step_states.is_step3_active}}step-active{{/step_states.is_step3_active}}" data-tooltip="{{#str}}review, local_aicourse{{/str}}">
-                        <span class="step-circle {{#step_states.is_step3_active}}step-circle-active{{/step_states.is_step3_active}}"></span>
-                        <span class="step-label">{{#str}}review, local_aicourse{{/str}}</span>
+                    <div class="step-connector {{#stepstates.is_connector2_active}}connector-active{{/stepstates.is_connector2_active}}"></div>
+                    <div class="step {{#stepstates.is_step3_active}}step-active{{/stepstates.is_step3_active}}" data-tooltip="{{#str}}review, local_haccgen{{/str}}">
+                        <span class="step-circle {{#stepstates.is_step3_active}}step-circle-active{{/stepstates.is_step3_active}}"></span>
+                        <span class="step-label">{{#str}}review, local_haccgen{{/str}}</span>
                     </div>
-                    <div class="step-connector {{#step_states.is_connector3_active}}connector-active{{/step_states.is_connector3_active}}"></div>
-                    <div class="step {{#step_states.is_step4_active}}step-active{{/step_states.is_step4_active}}" data-tooltip="{{#str}}finalize, local_aicourse{{/str}}">
-                        <span class="step-circle {{#step_states.is_step4_active}}step-circle-active{{/step_states.is_step4_active}}"></span>
-                        <span class="step-label">{{#str}}finalize, local_aicourse{{/str}}</span>
+                    <div class="step-connector {{#stepstates.is_connector3_active}}connector-active{{/stepstates.is_connector3_active}}"></div>
+                    <div class="step {{#stepstates.is_step4_active}}step-active{{/stepstates.is_step4_active}}" data-tooltip="{{#str}}finalize, local_haccgen{{/str}}">
+                        <span class="step-circle {{#stepstates.is_step4_active}}step-circle-active{{/stepstates.is_step4_active}}"></span>
+                        <span class="step-label">{{#str}}finalize, local_haccgen{{/str}}</span>
                     </div>
                 </div>
                 <div class="preview-card">
                     <div style="display: flex; align-items: center; gap: 6px; font-size: 0.9rem; color: #6c757d; border-bottom: 1px solid #ddd; padding-bottom: 4px; margin-bottom: 12px;">
                         <i class="fa fa-eye" aria-hidden="true"></i>
-                        <span>{{#str}}previewtitle, local_aicourse{{/str}}</span>
+                        <span>{{#str}}previewtitle, local_haccgen{{/str}}</span>
                     </div>
                     <h4 id="preview-title">{{TOPICTITLE}}</h4>
                     <div style="display: flex; flex-wrap: wrap; align-items: center; margin-bottom: 1rem;">
-                        <span style="color: #6c757d; margin-right: 0.5rem;">{{#str}}audience, local_aicourse{{/str}}</span>
+                        <span style="color: #6c757d; margin-right: 0.5rem;">{{#str}}audience, local_haccgen{{/str}}</span>
                         {{#audiencetags}}
                             <span class="audience-tag">{{.}}</span>
                         {{/audiencetags}}
                     </div>
-                    <p id="preview-audience">{{#str}}courseisfor, local_aicourse, {"title": "{{TOPICTITLE}}", "audience": "{{targetaudience}}"}{{/str}}</p>
-                    <p id="preview-level"><strong>{{#str}}levelofunderstanding, local_aicourse{{/str}}:</strong> <span id="preview-level-value">{{levelofunderstanding}}</span></p>
-                    <p id="preview-tone"><strong>{{#str}}toneofnarrative, local_aicourse{{/str}}:</strong> <span id="preview-tone-value">{{toneofnarrative}}</span></p>
-                    <p id="preview-duration"><strong>{{#str}}courseduration, local_aicourse{{/str}}:</strong> <span id="preview-duration-value">{{courseduration}}</span></p>
+                    <p id="preview-audience">{{#str}}courseisfor, local_haccgen, {"title": "{{TOPICTITLE}}", "audience": "{{targetaudience}}"}{{/str}}</p>
+                    <p id="preview-level"><strong>{{#str}}levelofunderstanding, local_haccgen{{/str}}:</strong> <span id="preview-level-value">{{levelofunderstanding}}</span></p>
+                    <p id="preview-tone"><strong>{{#str}}toneofnarrative, local_haccgen{{/str}}:</strong> <span id="preview-tone-value">{{toneofnarrative}}</span></p>
+                    <p id="preview-duration"><strong>{{#str}}courseduration, local_haccgen{{/str}}:</strong> <span id="preview-duration-value">{{courseduration}}</span></p>
                     {{#pdfuploaded}}
-                        <p id="preview-file"><strong>{{#str}}pdfuploaded, local_aicourse{{/str}}:</strong> <span id="preview-file-value">{{pdfuploaded}}</span></p>
+                        <p id="preview-file"><strong>{{#str}}pdfuploaded, local_haccgen{{/str}}:</strong> <span id="preview-file-value">{{pdfuploaded}}</span></p>
                     {{/pdfuploaded}}
                 </div>
             </div>
@@ -333,7 +354,7 @@
     <div class="modal-content">
       <form id="edit-topic-form">
         <div class="modal-header">
-          <h5 class="modal-title" id="editTopicModalLabel">Edit Topic</h5>
+          <h5 class="modal-title" id="editTopicModalLabel">{{#str}}edittopic, local_haccgen{{/str}}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
@@ -341,26 +362,26 @@
           <input type="hidden" id="edit-topic-id" name="id">
 
           <div class="mb-3">
-            <label for="edit-topic-title" class="form-label">Title</label>
+            <label for="edit-topic-title" class="form-label">{{#str}}title, local_haccgen{{/str}}</label>
             <input type="text" class="form-control" id="edit-topic-title" name="title" required>
           </div>
 
           <div class="mb-3">
-            <label for="edit-topic-description" class="form-label">Description</label>
+            <label for="edit-topic-description" class="form-label">{{#str}}description, local_haccgen{{/str}}</label>
             <textarea class="form-control" id="edit-topic-description" name="description" rows="4" required></textarea>
           </div>
 
  <div class="mb-3">
-  <label for="edit-topic-duration" class="form-label">Estimated Duration (e.g. 15 minutes)</label>
+  <label for="edit-topic-duration" class="form-label">{{#str}}estimatedduration, local_haccgen{{/str}}</label>
   <input type="text" class="form-control" id="edit-topic-duration" name="estimated_duration">
 </div>
 
 <div class="mb-3">
-  <label class="form-label">Learning Objectives</label>
+  <label class="form-label">{{#str}}learningobjectives, local_haccgen{{/str}}</label>
   <ul id="edit-topic-objectives" class="list-group ps-3 mb-2"></ul>
   <div class="input-group">
-    <input type="text" id="new-objective-input" class="form-control" placeholder="Add objective...">
-    <button type="button" id="add-objective-btn" class="btn btn-outline-primary">Add</button>
+    <input type="text" id="new-objective-input" class="form-control" placeholder="{{#str}}addobjective_placeholder, local_haccgen{{/str}}">>
+    <button type="button" id="add-objective-btn" class="btn btn-outline-primary">{{#str}}add, local_haccgen{{/str}}</button>
   </div>
 </div>
 
@@ -369,27 +390,27 @@
 
         
 <div class="mb-3">
-  <label class="form-label">Include Quiz?</label>
+  <label class="form-label">{{#str}}includequiz, local_haccgen{{/str}}</label>
   <div>
     <div class="form-check form-check-inline">
       <input class="form-check-input" type="radio" name="edit-topic-has-quiz" id="quiz-yes" value="yes">
-      <label class="form-check-label" for="quiz-yes">Yes</label>
+      <label class="form-check-label" for="quiz-yes">{{#str}}yes, local_haccgen{{/str}}</label>
     </div>
     <div class="form-check form-check-inline">
       <input class="form-check-input" type="radio" name="edit-topic-has-quiz" id="quiz-no" value="no" checked>
-      <label class="form-check-label" for="quiz-no">No</label>
+      <label class="form-check-label" for="quiz-no">{{#str}}no, local_haccgen{{/str}}</label>
     </div>
   </div>
 </div>
 
 <div class="mb-3" id="quiz-question-count-group" style="display: none;">
-  <label for="edit-topic-quiz-questions" class="form-label">Number of Quiz Questions</label>
+  <label for="edit-topic-quiz-questions" class="form-label">{{#str}}numberofquizquestions, local_haccgen{{/str}}</label>
   <input type="number" class="form-control" id="edit-topic-quiz-questions" min="1" value="1">
 </div>
 
 
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Save Changes</button>
+          <button type="submit" class="btn btn-primary">{{#str}}savechanges, local_haccgen{{/str}}</button>
         </div>
       </form>
     </div>
@@ -405,12 +426,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const topicsWrapper = document.getElementById('topics-wrapper');
     const topicOrderInput = document.getElementById('topic-order');
     const addTopicBtn = document.getElementById('add-topic-btn');
-    const form = document.getElementById('aicourse-form');
+    const form = document.getElementById('haccgen-form');
     const saveBtn = document.getElementById('save-btn');
     const backBtn = form.querySelector('button[name="action"][value="back"]');
 
     const editModal = document.getElementById('editTopicModal');
-    const editTitleInput = document.getElementById('edit-topic-title');
+    const edittitleInput = document.getElementById('edit-topic-title');
     const editDescriptionInput = document.getElementById('edit-topic-description');
     const editDurationSpan = document.getElementById('edit-topic-duration');
     const objectivesList = document.getElementById('edit-topic-objectives');
@@ -424,24 +445,43 @@ document.addEventListener('DOMContentLoaded', function () {
     const quizNoRadio = document.getElementById('quiz-no');
     const quizQuestionCountGroup = document.getElementById('quiz-question-count-group');
     const quizQuestionInput = document.getElementById('edit-topic-quiz-questions');
-
-    addObjectiveBtn.addEventListener('click', () => {
-    const text = newObjectiveInput.value.trim();
-    if (text) {
-        const li = document.createElement('li');
-        li.className = 'list-group-item d-flex justify-content-between align-items-center';
-        li.textContent = text;
-
-        const removeBtn = document.createElement('button');
-        removeBtn.className = 'btn btn-sm btn-danger ms-2';
-        removeBtn.textContent = '×';
-        removeBtn.addEventListener('click', () => li.remove());
-
-        li.appendChild(removeBtn);
-        objectivesList.appendChild(li);
-        newObjectiveInput.value = '';
-    }
+// Prevent Enter from submitting form except in textarea
+document.getElementById('edit-topic-form').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && e.target.id !== 'new-objective-input') {
+    e.preventDefault();
+  }
 });
+
+// Add Objective button
+addObjectiveBtn.addEventListener('click', () => {
+  const text = newObjectiveInput.value.trim();
+  if (text) {
+    const li = document.createElement('li');
+    li.className = 'list-group-item d-flex justify-content-between align-items-center';
+
+    const span = document.createElement('span');
+    span.textContent = text;
+
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'btn btn-sm btn-danger ms-2';
+    removeBtn.textContent = '×';
+    removeBtn.addEventListener('click', () => li.remove());
+
+    li.appendChild(span);
+    li.appendChild(removeBtn);
+    objectivesList.appendChild(li);
+    newObjectiveInput.value = '';
+  }
+});
+
+// Allow Enter to act like clicking "Add"
+newObjectiveInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    addObjectiveBtn.click();
+  }
+});
+
 
 
     const spinnerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Generating..`;
@@ -465,34 +505,37 @@ document.addEventListener('DOMContentLoaded', function () {
             item.remove();
             updateTopicOrder();
         } else if (editBtn) {
-            let topicData = {};
+            let topicdata = {};
             try {
-                topicData = JSON.parse(decodeURIComponent(item.dataset.topicdata || '{}'));
+                topicdata = JSON.parse(decodeURIComponent(item.dataset.topicdata || '{}'));
             } catch (err) {
                 console.warn('Failed to parse topic data:', err);
             }
 
-            editIdInput.value = topicData.id || item.dataset.id || '';
-            editTitleInput.value = topicData.title || '';
-            editDescriptionInput.value = topicData.description || '';
-            editDurationInput.value = topicData.estimated_duration || '';
-            quizYesRadio.checked = topicData.has_quiz || false;
-            quizNoRadio.checked = !topicData.has_quiz;
-            quizQuestionCountGroup.style.display = topicData.has_quiz ? 'block' : 'none';
-            quizQuestionInput.value = topicData.quiz_question_count || 1;
+            editIdInput.value = topicdata.id || item.dataset.id || '';
+            edittitleInput.value = topicdata.title || '';
+            editDescriptionInput.value = topicdata.description || '';
+            editDurationInput.value = topicdata.estimated_duration || '';
+            quizYesRadio.checked = topicdata.has_quiz || false;
+            quizNoRadio.checked = !topicdata.has_quiz;
+            quizQuestionCountGroup.style.display = topicdata.has_quiz ? 'block' : 'none';
+            quizQuestionInput.value = topicdata.quiz_question_count || 1;
             objectivesList.innerHTML = '';
-            (topicData.learning_objectives || []).forEach(obj => {
-            const li = document.createElement('li');
-             li.className = 'list-group-item d-flex justify-content-between align-items-center';
-            li.textContent = obj;
+     (topicdata.learning_objectives || []).forEach(obj => {
+  const li = document.createElement('li');
+  li.className = 'list-group-item d-flex justify-content-between align-items-center';
 
-            const removeBtn = document.createElement('button');
-            removeBtn.className = 'btn btn-sm btn-danger ms-2';
-             removeBtn.textContent = '×';
-             removeBtn.addEventListener('click', () => li.remove());
+  const span = document.createElement('span');
+  span.textContent = obj;
 
-    li.appendChild(removeBtn);
-    objectivesList.appendChild(li);
+  const removeBtn = document.createElement('button');
+  removeBtn.className = 'btn btn-sm btn-danger ms-2';
+  removeBtn.textContent = '×';
+  removeBtn.addEventListener('click', () => li.remove());
+
+  li.appendChild(span);
+  li.appendChild(removeBtn);
+  objectivesList.appendChild(li);
 });
 
             window.currentEditingItem = item;
@@ -505,7 +548,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Handle Add Topic button
     addTopicBtn.addEventListener('click', () => {
-        editTitleInput.value = '';
+        edittitleInput.value = '';
         editDescriptionInput.value = '';
         editDurationSpan.textContent = '';
         objectivesList.innerHTML = '';
@@ -525,14 +568,16 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('edit-topic-form').addEventListener('submit', function (e) {
         e.preventDefault();
 
-        const newTitle = editTitleInput.value.trim();
+        const newTitle = edittitleInput.value.trim();
         const newDesc = editDescriptionInput.value.trim();
       
         const duration = editDurationInput.value.trim();
 
-        const objectives = Array.from(objectivesList.querySelectorAll('li')).map(li => li.textContent.trim());
+const objectives = Array.from(objectivesList.querySelectorAll('li')).map(li =>
+  li.querySelector('span').textContent.trim()
+);
 
-        const topicData = {
+        const topicdata = {
             id: editIdInput.value || `topic-${Date.now()}`,
             title: newTitle,
             description: newDesc,
@@ -543,7 +588,7 @@ document.addEventListener('DOMContentLoaded', function () {
             content: ''
         };
 
-        const encodedData = encodeURIComponent(JSON.stringify(topicData));
+        const encodedData = encodeURIComponent(JSON.stringify(topicdata));
 
         if (window.isAddingNewTopic) {
             const newIndex = topicsWrapper.querySelectorAll('.topic-item').length;
@@ -551,7 +596,7 @@ document.addEventListener('DOMContentLoaded', function () {
             newTopic.className = 'topic-item';
             newTopic.setAttribute('draggable', 'true');
             newTopic.setAttribute('data-index', newIndex);
-            newTopic.setAttribute('data-id', topicData.id);
+            newTopic.setAttribute('data-id', topicdata.id);
             newTopic.setAttribute('data-content', '');
             newTopic.setAttribute('data-topicdata', encodedData);
             newTopic.tabIndex = 0;
@@ -592,19 +637,19 @@ document.addEventListener('DOMContentLoaded', function () {
             const title = span.textContent.split(':').slice(1).join(':').trim();
             item.dataset.index = index;
             span.textContent = `Topic ${index + 1}: ${title}`;
-            let topicData = {};
+            let topicdata = {};
             try {
-                topicData = JSON.parse(decodeURIComponent(item.dataset.topicdata || '{}'));
+                topicdata = JSON.parse(decodeURIComponent(item.dataset.topicdata || '{}'));
             } catch (e) {}
             return {
-                id: topicData.id,
-                title: topicData.title,
-                description: topicData.description,
-                estimated_duration: topicData.estimated_duration,
-                learning_objectives: topicData.learning_objectives,
-                content: topicData.content,
-                has_quiz: topicData.has_quiz || false,
-                quiz_question_count: topicData.quiz_question_count || 0
+                id: topicdata.id,
+                title: topicdata.title,
+                description: topicdata.description,
+                estimated_duration: topicdata.estimated_duration,
+                learning_objectives: topicdata.learning_objectives,
+                content: topicdata.content,
+                has_quiz: topicdata.has_quiz || false,
+                quiz_question_count: topicdata.quiz_question_count || 0
             };
         });
 
