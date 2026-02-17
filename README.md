@@ -182,6 +182,105 @@ Available settings include:
 
 ---
 
+## Getting API Credentials
+
+HACC Gen requires API credentials to function.
+
+### Step 1 – Open API Credentials Page
+
+Go to:
+
+Site administration → Plugins → Local plugins → HACC Gen
+
+Click:
+
+Get API Credentials
+
+This opens the API provider registration portal.
+
+---
+
+### Step 2 – Create an Account
+
+Register using your details:
+
+- Name
+- Email
+- Password
+- Company name (optional)
+
+---
+
+### Step 3 – Select a Plan
+
+Choose one of the available plans:
+
+- Free
+- Monthly
+- Yearly
+- Top-up
+
+Plan features and limits may change over time.
+
+---
+
+### Step 4 – Enter LMS and Billing Information
+
+Provide:
+
+LMS URL example:
+
+https://your-lms.example.com
+
+
+Note: The API credentials will be securely locked to your LMS domain.
+
+Also provide:
+
+- Company or billing name
+- GSTIN (optional)
+- State
+- Billing address
+
+---
+
+### Step 5 – Complete Registration
+
+- Free plan requires no payment.
+- Paid plans require payment before activation.
+
+---
+
+### Step 6 – Get API Credentials
+
+After successful registration, you will receive:
+
+- API URL
+- API Key
+- API Secret
+
+These credentials will be available in your API dashboard.
+
+---
+
+### Step 7 – Configure Credentials in Moodle
+
+Return to:
+
+Site administration → Plugins → Local plugins → HACC Gen
+
+Enter:
+
+- API URL
+- API Key
+- API Secret
+
+Save settings.
+
+The plugin is now ready to use.
+
+---
+
 ### Requirements
 
 - Moodle 3.9 or higher
