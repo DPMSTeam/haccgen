@@ -20,7 +20,7 @@ Using a guided 4-step workflow, the plugin generates:
 - Topic descriptions  
 - Subtopics  
 - Quiz questions  
-- AI-generated media (audio, images, video, transcripts)  
+- AI-generated text content
 
 Generated content can be saved as a draft or automatically created inside Moodle using **Page** and **Quiz** activities.
 
@@ -34,7 +34,6 @@ Perfect for:
 - Converting PDFs into structured Moodle courses  
 - AI-assisted instructional design  
 - Automatic quiz generation  
-- Multimedia content development  
 - Reducing course development time  
 
 ---
@@ -46,11 +45,6 @@ Perfect for:
 - Automatic **learning objectives**
 - Optional **quiz generation** with configurable number of questions
 - PDF-based content generation
-- AI media generation:
-  - Audio narration
-  - AI-generated images
-  - AI-generated videos
-  - Transcripts
 - Draft save/load system
 - One-click Moodle Page & Quiz creation
 - Course administration integration
@@ -109,20 +103,13 @@ Optional:
 
 ---
 
-#### Step 4 – Final Content & Media Generation
+#### Step 4 – Final Content
 
 The AI generates:
 
 - Subtopics for each topic
 - Detailed lesson content
 - Quiz questions (if enabled)
-
-Optional AI-generated media:
-
-- Audio narration
-- Images
-- Video content
-- Transcripts
 
 After review, you can:
 
@@ -177,7 +164,6 @@ Available settings include:
 - API Key
 - API Secret
 - API request timeout
-- Media generation options
 - Public link expiration settings
 
 ---
@@ -196,7 +182,7 @@ Click:
 
 Get API Credentials
 
-This opens the API provider registration portal.
+This opens the API provider registration portal(https://subscription.dynamicpixel.co.in).
 
 ---
 
@@ -283,7 +269,7 @@ The plugin is now ready to use.
 
 ### Requirements
 
-- Moodle 3.9 or higher
+- Moodle 4.0 or higher
 - External AI API access
 - Valid API credentials
 - PHP file upload support (for PDF processing)
@@ -295,7 +281,6 @@ The plugin is now ready to use.
 
 - AI output depends on external API availability
 - PDF extraction depends on server configuration
-- Media generation requires supported AI provider
 - Large content generation may be affected by timeout settings
 
 ---
@@ -311,13 +296,12 @@ The plugin is now ready to use.
 
 ### Changelog
 
-**2026.02.16**
+**2026.02.17**
 - Initial public release
 - 4-step AI course generator
 - PDF-based content generation
 - Automatic quiz creation
 - Draft save/load system
-- AI media generation (audio, image, video, transcript)
 - Automatic Moodle Page & Quiz creation
 - Course administration integration
 
